@@ -10,9 +10,9 @@ jobs:
   instrumentation-test:
     name: Run Instrumentation test
     runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [30,32,33]
+#    strategy:
+#      matrix:
+#        api-level: [30,32,33]
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -45,14 +45,14 @@ jobs:
               echo "Emulator $emulator_name already exists."
             else
               echo "Emulator $emulator_name does not exist. Creating..."
-              avdmanager create avd -n "$emulator_name" -k "system-images;android-${{ matrix.api-level }};google_apis_playstore;x86_64"
+              avdmanager create avd -n "$emulator_name" -k "system-images;android-30;google_apis_playstore;x86_64"
               
           #RUN ANDROID TEST
       - name: Run espresso tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           emulator-build: 9997245
-          api-level: ${{ matrix.api-level }}
+          api-level: 30
           target: google_apis_playstore
           arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
