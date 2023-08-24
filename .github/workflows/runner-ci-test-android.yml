@@ -38,15 +38,18 @@ jobs:
       - name: Start ADB Server
         run: adb start-server
 
-      - name: Check Emulator Existence
+      - name: Check if Emulator Exists
         run: |
-            emulator_name="emulator-30"
-            if avdmanager list avd | grep -q "$emulator_name"; then
-              echo "Emulator $emulator_name already exists."
+            # List available AVDs and store the output in a variable
+            avd_list=$(sdkmanager --list | grep "Available Android Virtual Devices")
+  
+            # Check if the desired emulator exists in the list
+            if [[ $avd_list == *"emulator-30"* ]]; then
+              echo "Emulator exists"
+              echo "EMULATOR_EXISTS=true" >> $GITHUB_ENV  # Set environment variable
             else
-              echo "Emulator $emulator_name does not exist. Creating..."
-              avdmanager create avd -n "$emulator_name" -k "system-images;android-30;google_apis_playstore;x86_64"
-              
+              echo "Emulator does not exist"
+            fi
           #RUN ANDROID TEST
       - name: Run espresso tests
         uses: reactivecircus/android-emulator-runner@v2
