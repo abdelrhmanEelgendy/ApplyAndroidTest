@@ -40,7 +40,7 @@ jobs:
 
       - name: Check Emulator Existence
         run: |
-            emulator_name="emulator-${{ matrix.api-level }}"
+            emulator_name="emulator-30"
             if avdmanager list avd | grep -q "$emulator_name"; then
               echo "Emulator $emulator_name already exists."
             else
