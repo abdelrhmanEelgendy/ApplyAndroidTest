@@ -43,3 +43,4 @@ jobs:
           profile: Nexus 5X
           force-avd-creation: false
           script: ./gradlew connectedCheck
+          #sdd
