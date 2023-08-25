@@ -57,7 +57,7 @@ jobs:
           profile: Nexus 5X
           force-avd-creation: false
           script: echo "Generated AVD snapshot for caching."
-      ############
+      #############
       - name: Run espresso tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
