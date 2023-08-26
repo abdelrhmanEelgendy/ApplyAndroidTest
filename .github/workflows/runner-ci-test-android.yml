@@ -2,7 +2,7 @@ name: Run Instrumentation-test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master2" ]
 
 
 
