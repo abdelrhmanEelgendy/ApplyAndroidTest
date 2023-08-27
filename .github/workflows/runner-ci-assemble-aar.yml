@@ -41,11 +41,13 @@ jobs:
           name: assemble_module
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-      - name: Releasing using Hub
-        uses: r0user/release-apk@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          APP_FOLDER: app
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          prerelease: true
+          files: |
+            app/build/outputs/apk/release/app-release-unsigned.apk
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
 #        if: failure()
