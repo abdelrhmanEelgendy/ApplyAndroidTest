@@ -42,14 +42,11 @@ jobs:
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - name: Create release and upload apk
-        uses: underwindfall/create-release-with-debugapk@v2.0.0
+      - name: Releasing using Hub
+        uses: r0user/release-apk@main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v1.0.0
-          asset_path: app/build/outputs/apk/debug/app-release-unsigned.apk
-          asset_name: Example.apk
-          asset_content_type: application/zi
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          APP_FOLDER: app
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
 #        if: failure()
