@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
     inputs:
       MODULE_NAME:
-        description: 'app'
+        description: app
         type: string
         required: true
       TAG_NAME:
@@ -40,6 +40,7 @@ jobs:
 
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
+
 
       - name: Build AAR ⚙️🛠
         run: ./gradlew ${{inputs.MODULE_NAME}}:assembleRelease
