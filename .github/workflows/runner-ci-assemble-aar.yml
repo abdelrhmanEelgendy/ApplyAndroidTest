@@ -44,14 +44,14 @@ jobs:
 
 
       - name: Build AAR ⚙️🛠
-        run: ./gradlew ${{inputs.MODULE_NAME}}:assembleRelease
+        run: ./gradlew app:assembleRelease
 
       - name: Upload Assemble Module AAR
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
           name: assemble_module
-          path: ${{inputs.MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
@@ -60,7 +60,7 @@ jobs:
           tag_name: ${{inputs.TAG_NAME}}
           prerelease: true
           files: |
-            ${{inputs.MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
+            app/build/outputs/apk/release/app-release-unsigned.apk
             
 
 
