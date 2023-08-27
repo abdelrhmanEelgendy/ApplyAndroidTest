@@ -3,6 +3,7 @@ name: Publish AAR Module
 on:
   push:
     branches: [ "master" ]
+  workflow_call:
     inputs:
       MODULE_NAME:
         description: app
