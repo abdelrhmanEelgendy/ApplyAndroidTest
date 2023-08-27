@@ -46,7 +46,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          tag_name: 1.0.0
+          tag_name: v1.0.0
           prerelease: true
           files: |
             app/build/outputs/apk/release/app-release-unsigned.apk
