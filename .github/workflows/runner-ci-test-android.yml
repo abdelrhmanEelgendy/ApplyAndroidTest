@@ -58,22 +58,17 @@ jobs:
           force-avd-creation: false
           script: echo "Generated AVD snapshot for caching."
       #############
-      - name: Create and start emulator
-        run: |
-          echo "no" | avdmanager create avd --name emulator --package 'system-images;android-30;google_apis_playstore;x86_64' --force
-          emulator -avd emulator -no-snapshot -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim -camera-back none &
       - name: Run espresso tests
-        run: ./gradlew connectedCheck
-#        uses: reactivecircus/android-emulator-runner@v2
-#        with:
-#          emulator-build: 9997245
-#          api-level: ${{ matrix.api-level }}
-#          target: google_apis_playstore
-#          arch: x86_64
-#          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-#          profile: Nexus 5X
-#          force-avd-creation: false
-#          script: ./gradlew connectedCheck
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          emulator-build: 9997245
+          api-level: ${{ matrix.api-level }}
+          target: google_apis_playstore
+          arch: x86_64
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          profile: Nexus 5X
+          force-avd-creation: false
+          script: ./gradlew connectedCheck
       - name: Start ADB Server
         run: adb start-server
       - name: Upload instrumentation test report
