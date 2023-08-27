@@ -33,27 +33,26 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build AAR ⚙️🛠
-        run: ./gradlew $MODULE_NAME:assembleRelease
+        run: ./gradlew ${{MODULE_NAME}}:assembleRelease
 
       - name: Upload Assemble Module AAR
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
           name: assemble_module
-          path: $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
+          path: ${{MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - name: Create Github Release
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          tag_name: v1.0.0
+          tag_name: ${{TAG_NAME}}
           prerelease: true
           files: |
-            $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
+            ${{MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
+            
 
-      - name: Determine Tag Name
-        id: determine_tag_name
-        run: echo "::set-output name=tag_name::v$(($(git describe --tags --abbrev=0 | cut -c 2-) + 1))"
+
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
 #        if: failure()
