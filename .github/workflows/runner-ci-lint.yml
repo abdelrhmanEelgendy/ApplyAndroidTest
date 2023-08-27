@@ -28,7 +28,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Run Lint
-        run: ./gradlew ${{ inputs.MODULE_NAME }}:lint
+        run: ./gradlew app:lint
 
       - name: Upload html test report
         # Upload report to ubuntu server to be used on another action...
@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: lint_report
-          path: ${{ inputs.MODULE_NAME }}/build/reports/lint-results-*
+          path: app/build/reports/lint-results-*
 
 #      - name: Ping Slack Android Lint Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
