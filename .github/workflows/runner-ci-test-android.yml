@@ -2,7 +2,7 @@ name: Run Instrumentation-test
 
 on:
   push:
-    branches: [ "master23" ]
+    branches: [ "master" ]
 
 
 
@@ -61,13 +61,13 @@ jobs:
       - name: Run espresso tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-#          emulator-build: 9997245
-#          api-level: ${{ matrix.api-level }}
-#          target: google_apis_playstore
-#          arch: x86_64
-#          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-#          profile: Nexus 5X
-#          force-avd-creation: false
+          emulator-build: 9997245
+          api-level: ${{ matrix.api-level }}
+          target: google_apis_playstore
+          arch: x86_64
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          profile: Nexus 5X
+          force-avd-creation: false
           script: ./gradlew connectedCheck
       - name: Start ADB Server
         run: adb start-server
