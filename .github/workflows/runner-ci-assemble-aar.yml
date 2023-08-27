@@ -8,6 +8,10 @@ on:
         description: 'app'
         type: string
         required: true
+      TAG_NAME:
+        description: 'v1.0.2'
+        type: string
+        required: true
 #on:
 #  workflow_call:
 #    secrets:
@@ -51,7 +55,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          tag_name: ${{TAG_NAME}}
+          tag_name: ${{inputs.TAG_NAME}}
           prerelease: true
           files: |
             ${{inputs.MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
@@ -67,7 +71,4 @@ jobs:
 #            *Assemble Android-module AAR failed*
 #          color: failure
 
-    env:
-      MODULE_NAME: app
-      TAG_NAME: v1.0.1
 
