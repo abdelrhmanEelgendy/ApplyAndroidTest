@@ -41,7 +41,6 @@ jobs:
           name: assemble_module
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-      - name: Create release and upload apk
       - name: Releasing using Hub
         uses: r0user/release-apk@main
         env:
