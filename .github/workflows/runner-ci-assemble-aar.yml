@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: assemble_module
-          path: app/build/outputs/aar/**-release.apk
+          path: app/build/outputs/apk/release/release.apk
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
 #      - name: Ping Slack Assemble Module AAR Failed

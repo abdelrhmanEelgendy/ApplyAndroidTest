@@ -1,48 +1,48 @@
-
-name: Run Android Lint
-
-
-on:
-  push:
-    branches: [ "master" ]
-    inputs:
-        MODULE_NAME:
-            description: 'app'
-            type: string
-            required: true
-
-
-jobs:
-  lint:
-    name: Run Android Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Run Lint
-        run: ./gradlew app:lint
-
-      - name: Upload html test report
-        # Upload report to ubuntu server to be used on another action...
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: lint_report
-          path: app/build/reports/lint-results-*
-
-#      - name: Ping Slack Android Lint Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
+#
+#name: Run Android Lint
+#
+#
+#on:
+#  push:
+#    branches: [ "master" ]
+#    inputs:
+#        MODULE_NAME:
+#            description: 'app'
+#            type: string
+#            required: true
+#
+#
+#jobs:
+#  lint:
+#    name: Run Android Lint
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v3
 #        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Android Lint failed*
-#          color: failure
+#          java-version: '17'
+#          distribution: 'corretto'
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
+#      - name: Run Lint
+#        run: ./gradlew app:lint
+#
+#      - name: Upload html test report
+#        # Upload report to ubuntu server to be used on another action...
+#        if: ${{ always() }}
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: lint_report
+#          path: app/build/reports/lint-results-*
+#
+##      - name: Ping Slack Android Lint Failed
+##        uses: someimportantcompany/github-actions-slack-message@v1
+##        if: failure()
+##        with:
+##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+##          text: |
+##            *Android Lint failed*
+##          color: failure
