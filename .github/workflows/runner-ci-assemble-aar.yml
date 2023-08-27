@@ -45,7 +45,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
-          tag_name: test
+          tag_name: ${{ github.ref }}
           prerelease: true
           files: |
             app/build/outputs/apk/release/app-release-unsigned.apk
