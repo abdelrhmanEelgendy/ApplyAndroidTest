@@ -13,7 +13,8 @@ on:
 #        description: 'Which module you need to run this flow on...'
 #        type: string
 #        required: true
-
+permissions:
+  contents: write
 jobs:
   assemble:
     name: Assemble Android Module AAR
