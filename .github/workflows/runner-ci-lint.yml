@@ -5,16 +5,12 @@ name: Run Android Lint
 on:
   push:
     branches: [ "master" ]
-#on:
-#  workflow_call:
-#    secrets:
-#      SLACK_WEBHOOK:
-#        required: true
-#    inputs:
-#      MODULE_NAME:
-#        description: 'Which module you need to run this flow on...'
-#        type: string
-#        required: true
+    inputs:
+        MODULE_NAME:
+            description: 'app'
+            type: string
+            required: true
+
 
 jobs:
   lint:
@@ -29,7 +25,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
-
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - name: Run Lint
         run: ./gradlew ${{ inputs.MODULE_NAME }}:lint
 
