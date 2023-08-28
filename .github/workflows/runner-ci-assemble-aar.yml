@@ -1,75 +1,78 @@
-#name: Publish AAR Module
-#
+name: Publish AAR Module
+
+
 #on:
-#  push:
-#    branches: [ "master" ]
 #  workflow_call:
-#    inputs:
-#      MODULE_NAME:
-#        description: app
-#        type: string
+#    secrets:
+#      SLACK_WEBHOOK:
 #        required: true
-#      TAG_NAME:
-#        description: 'v1.0.2'
-#        type: string
-#        required: true
-##on:
-##  workflow_call:
-##    secrets:
-##      SLACK_WEBHOOK:
-##        required: true
-##    inputs:
-##      MODULE_NAME:
-##        description: 'Which module you need to run this flow on...'
-##        type: string
-##        required: true
-#permissions:
-#  contents: write
-#jobs:
-#  assemble:
-#    name: Assemble Android Module AAR
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout the code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
+
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  MODULE_NAME: :app
+  TAG_NAME: "v1.0.4"
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    name: Assemble Android Module AAR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+        #BUILD  CACHING
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+          #SETUP JAVA
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant Permission for Gradlew to Execute
+        run: chmod +x ./gradlew
+
+      - name: Build AAR ⚙️🛠
+        run: ./gradlew $MODULE_NAME:assembleRelease
+
+      - name: Upload Assemble Module AAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: assemble_module
+          path: $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
+
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          tag_name: TAG_NAME
+          prerelease: true
+          files: |
+            $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
+
+#      - name: Ping Slack Assemble Module AAR Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
 #        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#
-#      - name: Grant Permission for Gradlew to Execute
-#        run: chmod +x ./gradlew
-#
-#
-#      - name: Build AAR ⚙️🛠
-#        run: ./gradlew app:assembleRelease
-#
-#      - name: Upload Assemble Module AAR
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: assemble_module
-#          path: app/build/outputs/apk/release/app-release-unsigned.apk
-#          if-no-files-found: error
-#      - name: Create Github Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          generate_release_notes: true
-#          tag_name: "v1.0.1"
-#          prerelease: true
-#          files: |
-#            app/build/outputs/apk/release/app-release-unsigned.apk
-#
-#
-#
-##      - name: Ping Slack Assemble Module AAR Failed
-##        uses: someimportantcompany/github-actions-slack-message@v1
-##        if: failure()
-##        with:
-##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-##          text: |
-##            *Assemble Android-module AAR failed*
-##          color: failure
-#
-#
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Assemble Android-module AAR failed*
+#          color: failure
+
+

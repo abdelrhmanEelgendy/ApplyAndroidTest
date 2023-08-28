@@ -5,56 +5,38 @@ name: Run Unit-test
 #    secrets:
 #      SLACK_WEBHOOK:
 #        required: true
-#    inputs:
-#      MODULE_NAME:
-#        description: 'app'
-#        type: string
-#        required: true
+
 on:
   push:
     branches: [ "master" ]
 
-
+env:
+  MODULE_NAME: :app
 
 jobs:
-  sync:
+  unit-test:
+    name: Run Unit test
     runs-on: ubuntu-latest
-    name: Git Repo Sync
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          fetch-depth: 0
-      - uses: wangchucheng/git-repo-sync@v0.1.0
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests
+        run: ./gradlew $MODULE_NAME:test
+      - name: Upload unit test report
+        # Upload report to ubuntu server to be used on another action...
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
         with:
-          # Such as https://github.com/wangchucheng/git-repo-sync.git
-          target-url: "https://gitlab.com/justme4772734/test-sync.git"
-          # Such as wangchucheng
-          target-username: "@mostafamosad245"
-          # You can store token in your project's 'Setting > Secrets' and reference the name here. Such as ${{ secrets.ACCESS\_TOKEN }}
-          target-token: "glpat-gxN5BqsCF3Aihr4Cik8b"
-#  unit-test:
-#    name: Run Unit test
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout the code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#      - name: Run tests
-#        run: ./gradlew test
-#      - name: Upload unit test report
-#        # Upload report to ubuntu server to be used on another action...
-#        if: ${{ always() }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: unit_test_report
-#          path: app/build/reports/tests/testDebugUnitTest/
+          name: unit_test_report
+          path: $MODULE_NAME/build/reports/tests/testDebugUnitTest/
 
 #      - name: Ping Slack Unit-test Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
