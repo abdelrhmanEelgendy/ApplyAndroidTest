@@ -10,7 +10,7 @@
 ##        required: true
 #
 #env:
-#  MODULE_NAME: :app
+#  MODULE_NAME: app
 #
 #jobs:
 #  lint:
@@ -30,14 +30,14 @@
 #        run: chmod +x gradlew
 #
 #      - name: Run Lint
-#        run: ./gradlew $MODULE_NAME:lint
+#        run: ./gradlew ${{ env.MODULE_NAME }}:lint
 #
 #      - name: Upload html test report
 #        if: ${{ always() }}
 #        uses: actions/upload-artifact@v3
 #        with:
 #          name: lint_report
-#          path: $MODULE_NAME/build/reports/lint-results-*
+#          path: ${{ env.MODULE_NAME }}/build/reports/lint-results-*
 #
 ##      - name: Ping Slack Android Lint Failed
 ##        uses: someimportantcompany/github-actions-slack-message@v1

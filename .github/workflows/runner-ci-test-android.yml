@@ -10,7 +10,7 @@
 ##        required: true
 #
 #env:
-#  MODULE_NAME: :app
+#  MODULE_NAME: app
 #
 #jobs:
 #  instrumentation-test:
@@ -78,7 +78,7 @@
 #          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
 #          profile: Nexus 5X
 #          force-avd-creation: false
-#          script: ./gradlew $MODULE_NAME:connectedCheck
+#          script: ./gradlew ${{ env.MODULE_NAME }}:connectedCheck
 #
 #      - name: Start ADB Server
 #        run: adb start-server
@@ -88,7 +88,7 @@
 #        uses: actions/upload-artifact@v3
 #        with:
 #          name: instrumentation_test_report
-#          path: $MODULE_NAME/build/reports/androidTests/connected/
+#          path: ${{ env.MODULE_NAME }}/build/reports/androidTests/connected/
 #
 #
 #      - name: Stop ADB Server

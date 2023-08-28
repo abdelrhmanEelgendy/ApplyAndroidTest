@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
 
 env:
-  MODULE_NAME: :app
+  MODULE_NAME: app
   TAG_NAME: "v1.0.4"
 
 permissions:
@@ -24,7 +24,6 @@ jobs:
     name: Assemble Android Module AAR
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ env.MODULE_NAME }}
       - name: Checkout the code
         uses: actions/checkout@v3
 
