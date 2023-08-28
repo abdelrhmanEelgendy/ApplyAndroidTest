@@ -48,13 +48,13 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build AAR ⚙️🛠
-        run: ./gradlew ${MODULE_NAME}:assembleRelease
+        run: ./gradlew {{MODULE_NAME}}:assembleRelease
 
       - name: Upload Assemble Module AAR
         uses: actions/upload-artifact@v3
         with:
           name: assemble_module
-          path: ${MODULE_NAME}/build/outputs/apk/release/app-release-unsigned.apk
+          path: {{MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
 
       - name: Create Github Release
@@ -63,7 +63,7 @@ jobs:
           generate_release_notes: true
           tag_name: TAG_NAME
           prerelease: true
-          files: ${MODULE_NAME}/build/outputs/apk/release/app-release-unsigned.apk
+          files: {{MODULE_NAME}}/build/outputs/apk/release/app-release-unsigned.apk
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
