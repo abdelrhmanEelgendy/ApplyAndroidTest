@@ -1,49 +1,49 @@
-#name: Run Android Lint
-#
+name: Run Android Lint
+
+on:
+  push:
+    branches: [ "master" ]
 #on:
-#  push:
-#    branches: [ "master" ]
-##on:
-##  workflow_call:
-##    secrets:
-##      SLACK_WEBHOOK:
-##        required: true
-#
-#env:
-#  MODULE_NAME: app
-#
-#jobs:
-#  lint:
-#    name: Run Android Lint
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout the code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
+#  workflow_call:
+#    secrets:
+#      SLACK_WEBHOOK:
+#        required: true
+
+env:
+  MODULE_NAME: app
+
+jobs:
+  lint:
+    name: Run Android Lint
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Lint
+        run: ./gradlew ${{ env.MODULE_NAME }}:lint
+
+      - name: Upload html test report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint_report
+          path: ${{ env.MODULE_NAME }}/build/reports/lint-results-*
+
+#      - name: Ping Slack Android Lint Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
 #        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#
-#      - name: Run Lint
-#        run: ./gradlew ${{ env.MODULE_NAME }}:lint
-#
-#      - name: Upload html test report
-#        if: ${{ always() }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: lint_report
-#          path: ${{ env.MODULE_NAME }}/build/reports/lint-results-*
-#
-##      - name: Ping Slack Android Lint Failed
-##        uses: someimportantcompany/github-actions-slack-message@v1
-##        if: failure()
-##        with:
-##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-##          text: |
-##            *Android Lint failed*
-##          color: failure
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Android Lint failed*
+#          color: failure

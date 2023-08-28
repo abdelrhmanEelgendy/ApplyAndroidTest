@@ -1,48 +1,48 @@
-#name: Run Unit-test
-#
-##on:
-##  workflow_call:
-##    secrets:
-##      SLACK_WEBHOOK:
-##        required: true
-#
+name: Run Unit-test
+
 #on:
-#  push:
-#    branches: [ "master" ]
-#
-#env:
-#  MODULE_NAME: app
-#
-#jobs:
-#  unit-test:
-#    name: Run Unit test
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout the code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
+#  workflow_call:
+#    secrets:
+#      SLACK_WEBHOOK:
+#        required: true
+
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  MODULE_NAME: app
+
+jobs:
+  unit-test:
+    name: Run Unit test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests
+        run: ./gradlew ${{ env.MODULE_NAME }}:test
+      - name: Upload unit test report
+        # Upload report to ubuntu server to be used on another action...
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit_test_report
+          path: ${{ env.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
+
+#      - name: Ping Slack Unit-test Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
 #        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#      - name: Run tests
-#        run: ./gradlew ${{ env.MODULE_NAME }}:test
-#      - name: Upload unit test report
-#        # Upload report to ubuntu server to be used on another action...
-#        if: ${{ always() }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: unit_test_report
-#          path: ${{ env.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
-#
-##      - name: Ping Slack Unit-test Failed
-##        uses: someimportantcompany/github-actions-slack-message@v1
-##        if: failure()
-##        with:
-##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-##          text: |
-##            *Unit-test failed*
-##          color: failure
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Unit-test failed*
+#          color: failure
