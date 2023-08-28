@@ -63,8 +63,7 @@ jobs:
           generate_release_notes: true
           tag_name: TAG_NAME
           prerelease: true
-          files: |
-            $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
+          files: $MODULE_NAME/build/outputs/apk/release/app-release-unsigned.apk
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
