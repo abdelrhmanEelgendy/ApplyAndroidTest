@@ -88,7 +88,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: instrumentation_test_report
-          path: $MODULE_NAME/build/reports/androidTests/connected/
+          path: ${{MODULE_NAME}}/build/reports/androidTests/connected/
 
 
       - name: Stop ADB Server
