@@ -1,22 +1,20 @@
 name: Run Unit-test
 
-#on:
-#  workflow_call:
+on:
+  workflow_call:
 #    secrets:
 #      SLACK_WEBHOOK:
 #        required: true
-
-on:
-  push:
-    branches: [ "master" ]
-
-env:
-  MODULE_NAME: app
+    inputs:
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
 
 jobs:
   unit-test:
     name: Run Unit test
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -26,17 +24,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
       - name: Run tests
-        run: ./gradlew ${{ env.MODULE_NAME }}:test
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:testDebugUnitTest
+
       - name: Upload unit test report
         # Upload report to ubuntu server to be used on another action...
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: unit_test_report
-          path: ${{ env.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
+          path: ${{ inputs.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
 
 #      - name: Ping Slack Unit-test Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1

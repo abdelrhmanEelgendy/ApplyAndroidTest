@@ -1,16 +1,15 @@
 name: Run Instrumentation-test
 
 on:
-  push:
-    branches: [ "master" ]
-#on:
-#  workflow_call:
+  workflow_call:
 #    secrets:
 #      SLACK_WEBHOOK:
 #        required: true
-
-env:
-  MODULE_NAME: app
+    inputs:
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
 
 jobs:
   instrumentation-test:
@@ -18,7 +17,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [30]
+        api-level: [ 30 ]
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -78,27 +77,27 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           profile: Nexus 5X
           force-avd-creation: false
-          script: ./gradlew ${{ env.MODULE_NAME }}:connectedCheck
+          script: ./gradlew ${{ inputs.MODULE_NAME }}:connectedCheck
 
       - name: Start ADB Server
         run: adb start-server
 
       - name: Upload instrumentation test report
-        # Upload report
+        # Upload report to ubuntu server to be used on another action...
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: instrumentation_test_report
-          path: ${{ env.MODULE_NAME }}/build/reports/androidTests/connected/
-
+          path: ${{ inputs.MODULE_NAME }}/build/reports/androidTests/connected/
 
       - name: Stop ADB Server
         run: adb kill-server
 
-#      - name: Ping Slack Unit-test Failed
+#      - name: Ping Slack Instrumentation-test Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
 #        if: failure()
 #        with:
 #          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 #          text: |
-#            *Android-test failed*
+#            *Instrumentation-test failed*
 #          color: failure

@@ -1,21 +1,20 @@
 name: Run Android Lint
 
 on:
-  push:
-    branches: [ "master" ]
-#on:
-#  workflow_call:
+  workflow_call:
 #    secrets:
 #      SLACK_WEBHOOK:
 #        required: true
-
-env:
-  MODULE_NAME: app
+    inputs:
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
 
 jobs:
   lint:
     name: Run Android Lint
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -30,14 +29,15 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Lint
-        run: ./gradlew ${{ env.MODULE_NAME }}:lint
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:lint
 
       - name: Upload html test report
+        # Upload report to ubuntu server to be used on another action...
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: lint_report
-          path: ${{ env.MODULE_NAME }}/build/reports/lint-results-*
+          path: ${{ inputs.MODULE_NAME }}/build/reports/lint-results-*
 
 #      - name: Ping Slack Android Lint Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
