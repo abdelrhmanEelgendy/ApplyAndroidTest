@@ -9,19 +9,19 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
-    steps:
-      - name: Ping Slack Test & Deploy Android AAR Started
-        uses: someimportantcompany/github-actions-slack-message@v1
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: Test & Deploy AAR Started
+#    steps:
+#      - name: Ping Slack Test & Deploy Android AAR Started
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: Test & Deploy AAR Started
 
 #  workflow-lint:
 #    uses: ./.github/workflows/work-call-ci-lint.yml
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'app'
+#      MODULE_NAME: 'core_module'
 #
 #  workflow-test-unit:
 #    needs: [ workflow-lint ]
@@ -29,7 +29,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'app'
+#      MODULE_NAME: 'core_module'
 #
 #  workflow-test-android:
 #    needs: [ workflow-lint ]
@@ -37,14 +37,14 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'app'
+#      MODULE_NAME: 'core_module'
 
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'app'
+      MODULE_NAME: 'core_module'
 
   workflow-git_release_upload_files:
     needs: [ workflow-assemble-aar ]

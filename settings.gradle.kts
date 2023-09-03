@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Apply CI CD"
 include(":app")
- 
+include(":core_module")
