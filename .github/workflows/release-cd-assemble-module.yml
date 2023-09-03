@@ -9,12 +9,12 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
-#    steps:
-#      - name: Ping Slack Test & Deploy Android AAR Started
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: Test & Deploy AAR Started
+    steps:
+      - name: Ping Slack Test & Deploy Android AAR Started
+        uses: someimportantcompany/github-actions-slack-message@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: Test & Deploy AAR Started
 
 #  workflow-lint:
 #    uses: ./.github/workflows/work-call-ci-lint.yml
