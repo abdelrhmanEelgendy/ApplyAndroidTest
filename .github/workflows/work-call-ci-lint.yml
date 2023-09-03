@@ -2,9 +2,9 @@ name: Run Android Lint
 
 on:
   workflow_call:
-#    secrets:
-#      SLACK_WEBHOOK:
-#        required: true
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
     inputs:
       MODULE_NAME:
         description: 'Which module you need to run this flow on...'

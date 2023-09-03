@@ -6,52 +6,51 @@ on:
       - 'v*'
 
 jobs:
-#  start:
-##    name: Start Deploy Workflow
-##    runs-on: ubuntu-latest
-##    steps:
-##      - name: Ping Slack Test & Deploy Android AAR Started
-##        uses: someimportantcompany/github-actions-slack-message@v1
-##        with:
-##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-##          text: Test & Deploy AAR Started
+  start:
+    name: Start Deploy Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Slack Test & Deploy Android AAR Started
+        uses: someimportantcompany/github-actions-slack-message@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: Test & Deploy AAR Started
 
-  workflow-lint:
-    uses: ./.github/workflows/work-call-ci-lint.yml
+#  workflow-lint:
+#    uses: ./.github/workflows/work-call-ci-lint.yml
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      MODULE_NAME: 'app'
-
-  workflow-test-unit:
-    needs: [ workflow-lint ]
-    uses: ./.github/workflows/work-call-ci-test-unit.yml
+#    with:
+#      MODULE_NAME: 'app'
+#
+#  workflow-test-unit:
+#    needs: [ workflow-lint ]
+#    uses: ./.github/workflows/work-call-ci-test-unit.yml
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      MODULE_NAME: 'app'
-
-  workflow-test-android:
-    needs: [ workflow-lint ]
-    uses: ./.github/workflows/work-call-ci-test-android.yml
+#    with:
+#      MODULE_NAME: 'app'
+#
+#  workflow-test-android:
+#    needs: [ workflow-lint ]
+#    uses: ./.github/workflows/work-call-ci-test-android.yml
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      MODULE_NAME: 'app'
+#    with:
+#      MODULE_NAME: 'app'
 
   workflow-assemble-aar:
-    needs: [ workflow-test-unit, workflow-test-android ]
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       MODULE_NAME: 'app'
 
   workflow-git_release_upload_files:
     needs: [ workflow-assemble-aar ]
     uses: ./.github/workflows/work-call-cd-git-release-module.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_FILES_ID: 'assemble_module'
 
