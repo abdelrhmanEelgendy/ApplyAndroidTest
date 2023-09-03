@@ -10,6 +10,10 @@ on:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
+      NEW_AAR_FILE_NAME:
+        description: 'The new name for the AAR file (e.g., finpay-payment-sdk-v1.0.0-release.aar).'
+        type: string
+        required: true
     # Map the workflow outputs to job outputs
     outputs:
       release_url:
@@ -55,7 +59,8 @@ jobs:
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
       - name: Rename AAR file
-        run: mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/new-name.aar
+        run: mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
+          ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
 
       - name: Upload Generated Android AAR 🗳
         id: upload-release-asset
