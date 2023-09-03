@@ -58,6 +58,12 @@ jobs:
       - name: List downloaded files
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
+      - name: Get Tag Version
+        run: |
+            TAG_NAME="${{ github.ref }}"
+            # Remove the 'v' prefix if it exists
+            TAG_VERSION="${TAG_NAME#v}"
+            echo "::set-output name=TAG_VERSION::$TAG_VERSION"
       - name: Rename AAR file
         run: mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
           ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
