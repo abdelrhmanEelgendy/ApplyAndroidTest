@@ -69,6 +69,11 @@ jobs:
       - name: Sign ARR 🖋
         run: jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }} ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }} key_alias
 
+      - name: Calculate SHA-256 Checksum
+        run: |
+          FILE_PATH=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
+            CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
+            echo "SHA-256 Checksum: $CHECKSUM"
 
       - name: Upload Generated Android AAR 🗳
         id: upload-release-asset
