@@ -46,13 +46,21 @@ jobs:
     with:
       MODULE_NAME: 'core_module'
 
-  workflow-git_release_upload_files:
+  workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
-    uses: ./.github/workflows/work-call-cd-git-release-module.yml
+    uses: ./.github/workflows/work-call-cd-sign-arr.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_FILES_ID: 'assemble_module'
+
+#  workflow-git_release_upload_files:
+#    needs: [ workflow-assemble-aar ]
+#    uses: ./.github/workflows/work-call-cd-git-release-module.yml
+#    secrets:
+#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#    with:
+#      UPLOADED_FILES_ID: 'assemble_module'
 
 #  finish:
 #    needs: [ workflow-git_release_upload_files ]
