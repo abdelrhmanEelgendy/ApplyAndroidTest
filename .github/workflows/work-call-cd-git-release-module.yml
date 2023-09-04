@@ -69,8 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
+          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.NEW_AAR_FILE_NAME}}
           asset_content_type: application/aar
 
 #      - name: Ping Slack Assemble Module AAR Failed
