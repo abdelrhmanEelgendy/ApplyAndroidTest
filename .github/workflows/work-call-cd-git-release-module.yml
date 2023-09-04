@@ -90,7 +90,7 @@ jobs:
           arr_path=${{steps.rename_aar_file.outputs.named_file}}
           filename=$(basename "${arr_path}")
           module_name="${filename/.aar/}"
-          zip -r ${module_name}.zip $arr_path ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt
+          zip -r ${module_name}.zip $filename ${module_name}-checksum.txt
           mv ${module_name}.zip ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/
           echo "zip_file_path=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT  
 
@@ -99,3 +99,14 @@ jobs:
         with:
           name: my_archive
           path: ${{steps.zip_file.outputs.zip_file_path}}
+
+
+      - name: Upload The Zip File
+        id: upload-arr-checksum
+        uses: sekwah41/upload-release-assets@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.git_release.outputs.release_url }}
+          asset_path: ${{steps.zip_file.outputs.zip_file_path}}
+          asset_content_type: text/plain
