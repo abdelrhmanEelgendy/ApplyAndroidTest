@@ -79,12 +79,12 @@ jobs:
       - name: Sign ARR 🖋
         run: |
           echo my_var ${{steps.rename_aar_file.outputs.named_file}}
-          jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{needs.rename_aar_file.outputs.named_file}} ${{needs.rename_aar_file.outputs.named_file}} key_alias
+          jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{steps.rename_aar_file.outputs.named_file}} ${{steps.rename_aar_file.outputs.named_file}} key_alias
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
         run: |
-          FILE_PATH=${{needs.rename_aar_file.outputs.named_file}}
+          FILE_PATH=${{steps.rename_aar_file.outputs.named_file}}
             CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
             echo "SHA-256 Checksum: $CHECKSUM"
             echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
