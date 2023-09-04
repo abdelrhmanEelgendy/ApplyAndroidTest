@@ -78,7 +78,7 @@ jobs:
           module_name="${filename/.aar/}"
           CHECKSUM=$(sha256sum "$full_path" | cut -d ' ' -f 1)
           echo "SHA-256 Checksum: $CHECKSUM"
-          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/"$module_name"-checksum.txt
+          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/"${filename/.aar/}"-checksum.txt
           echo "Checksum file created"
 
 #      - name: Create ZIP File 🗜
