@@ -60,8 +60,9 @@ jobs:
 
       - name: Rename AAR file 📝
         run: |
-          SET file_name=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          SET _result=%file_name:-release=-${{github.ref_name}}-release%
+          file_name=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
+          _result="${file_name/-release/-${{ github.ref_name }}-release}"
+          echo "Renaming $file_name to $_result"
           mv file_name \ _result
 #      - name: Rename AAR file 📝
 #        run: |
