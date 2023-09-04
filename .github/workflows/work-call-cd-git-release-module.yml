@@ -80,7 +80,7 @@ jobs:
           CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
           echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
           echo "Checksum file created"
-          echo "checksum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT 
+          echo checksum_file="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT 
 
       - name: Upload Singed AAR CheckSum
         id: upload-arr-checksum
