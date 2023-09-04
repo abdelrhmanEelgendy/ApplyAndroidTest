@@ -59,19 +59,17 @@ jobs:
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
 
-      - name: Extract Filename
-        id: extract_filename
+      - name: Find AAR file
+        id: find_aar
         run: |
-          file_path="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar"
-          filename=$(basename "$file_path")
-          echo "::set-output name=filename::$filename"
-          echo "Extracted filename: $filename"
+          file_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
+          echo "::set-output name=file_path::$file_path"
 
 
       - name: Rename AAR file 📝
         run: |
           file_name=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          _result="${file_name/-release/-${{ github.ref_name }}-release}"
+          _result=${{inputs.NEW_AAR_FILE_NAME}}
           mv file_name \ _result
 #      - name: Rename AAR file 📝
 #        run: |
