@@ -58,24 +58,33 @@ jobs:
       - name: List downloaded files
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
-#      - name: Rename AAR file
-#        run: |
-#          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
-#            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
+      - name: Rename AAR file
+        run: |
+          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
+            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
 
-      - uses: r0adkll/sign-android-release@v1
-        name: Sign app APK
-        # ID used to access action output
-        id: sign_app
-        with:
-          releaseDirectory: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE_64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
-          keyPassword: ${{ secrets.STORE_PASSWORD }}
-        env:
-          # override default build-tools version (29.0.3) -- optional
-          BUILD_TOOLS_VERSION: "30.0.2"
+#      - uses: r0adkll/sign-android-release@v1
+#        name: Sign app APK
+#        # ID used to access action output
+#        id: sign_app
+#        with:
+#          releaseDirectory: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+#          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE_64 }}
+#          alias: ${{ secrets.KEY_ALIAS }}
+#          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
+#          keyPassword: ${{ secrets.STORE_PASSWORD }}
+#        env:
+#          # override default build-tools version (29.0.3) -- optional
+#          BUILD_TOOLS_VERSION: "30.0.2"
+
+      - name: Create Keystore
+        run: |
+          keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -alias ${{secrets.KEY_ALIAS}} "CN=My Key, OU=Example, O=Example, L=City, ST=State, C=US"
+
+#      - name: Sign ARR
+#        run: |
+#          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${{secrets.KEY_STORE_NAME}}.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/signed_${{inputs.NEW_AAR_FILE_NAME}} ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }} ${{secrets.KEY_ALIAS}}
+##          jarsigner -verify app-release-unsigned.apk
 
       - name: Upload Generated Android AAR 🗳
         id: upload-release-asset
