@@ -84,10 +84,11 @@ jobs:
         id: zip_file
         run: |
           arr_path=${{steps.rename_aar_file.outputs.named_file}}
+          arr_name=$(basename "${arr_path}")
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -r ${module_name}.zip ${module_name}-checksum.txt
+          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
           echo "zip_file_path=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT  
 
       - name: Upload The Zip File
