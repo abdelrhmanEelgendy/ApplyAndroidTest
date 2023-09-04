@@ -88,7 +88,6 @@ jobs:
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -r ${module_name}.zip ${module_name}-checksum.txt
-          mv ${module_name}.zip ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/
           echo "zip_file_path=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT  
 
       - name: Upload The Zip File
