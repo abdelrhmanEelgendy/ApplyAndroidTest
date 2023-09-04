@@ -68,7 +68,7 @@ jobs:
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
+          releaseDirectory: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE_64 }}
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
