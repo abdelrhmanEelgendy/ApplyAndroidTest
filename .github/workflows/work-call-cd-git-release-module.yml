@@ -74,7 +74,7 @@ jobs:
           FILE_PATH=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
             CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
             echo "SHA-256 Checksum: $CHECKSUM"
-            echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/checksum.txt
+            echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
             echo "Checksum file created"
 
       - name: Upload Generated Android AAR 🗳 and Checksum 🔍 to Git Release
