@@ -58,6 +58,16 @@ jobs:
       - name: List downloaded files
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
+
+      - name: Extract Filename
+        id: extract_filename
+        run: |
+          file_path="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar"
+          filename=$(basename "$file_path")
+          echo "::set-output name=filename::$filename"
+          echo "Extracted filename: $filename"
+
+
       - name: Rename AAR file 📝
         run: |
           file_name=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
