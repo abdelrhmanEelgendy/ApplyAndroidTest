@@ -63,8 +63,19 @@ jobs:
 #          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
 #            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
 
-      - name: show upload url
-        run: echo ${{ needs.git_release.outputs.release_url }}
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE_64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
+          keyPassword: ${{ secrets.STORE_PASSWORD }}
+        env:
+          # override default build-tools version (29.0.3) -- optional
+          BUILD_TOOLS_VERSION: "30.0.2"
 
       - name: Upload Generated Android AAR 🗳
         id: upload-release-asset
@@ -73,7 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
+          asset_path: ${{steps.sign_app.outputs.signedReleaseFile}}
           asset_content_type: application/aar
           asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
 
