@@ -78,7 +78,7 @@ jobs:
 
       - name: Sign ARR 🖋
         run: |
-          echo my_var ${{needs.rename_aar_file.outputs.named_file}}
+          echo my_var ${{named_file.rename_aar_file.outputs.named_file}}
           jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{needs.rename_aar_file.outputs.named_file}} ${{needs.rename_aar_file.outputs.named_file}} key_alias
 
       - name: Calculate SHA-256 Checksum 🔍
@@ -88,39 +88,4 @@ jobs:
             CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
             echo "SHA-256 Checksum: $CHECKSUM"
             echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
-            echo "::set-output name=checksum_file::${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt"
             echo "Checksum file created"
-
-      - name: Upload Generated Android AAR And Checksum File 📤
-        id: upload-release-asset
-        uses: sekwah41/upload-release-assets@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: |
-            ${{needs.rename_aar_file.outputs.named_file}}
-            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
-          asset_content_type: |
-            application/aar
-#            text/plain
-
-#      - name: Upload Singed AAR CheckSum
-#        id: upload-arr-checksum
-#        uses: sekwah41/upload-release-assets@v1.1.0
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ needs.git_release.outputs.release_url }}
-#          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
-#          asset_content_type: text/plain
-#          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
-
-#      - name: Ping Slack Assemble Module AAR Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Assemble Android-module AAR failed*
-#          color: failure
