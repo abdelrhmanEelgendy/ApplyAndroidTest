@@ -58,10 +58,10 @@ jobs:
       - name: List downloaded files
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
-      - name: Rename AAR file
-        run: |
-          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
-            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
+#      - name: Rename AAR file
+#        run: |
+#          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
+#            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
 
       - name: show upload url
         run: echo ${{ needs.git_release.outputs.release_url }}
@@ -73,9 +73,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.NEW_AAR_FILE_NAME}}
+          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
           asset_content_type: application/aar
-#          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
+          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
