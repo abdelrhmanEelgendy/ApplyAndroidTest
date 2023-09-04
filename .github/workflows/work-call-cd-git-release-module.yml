@@ -86,21 +86,21 @@ jobs:
           upload_url: ${{ needs.git_release.outputs.release_url }}
           asset_path: |
             ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{ inputs.NEW_AAR_FILE_NAME }}
-            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
+#            ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
           asset_content_type: |
             application/aar
 #            text/plain
 
-#      - name: Upload Singed AAR CheckSum
-#        id: upload-arr-checksum
-#        uses: sekwah41/upload-release-assets@v1.1.0
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ needs.git_release.outputs.release_url }}
-#          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
-#          asset_content_type: text/plain
-#          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
+      - name: Upload Singed AAR CheckSum
+        id: upload-arr-checksum
+        uses: sekwah41/upload-release-assets@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.git_release.outputs.release_url }}
+          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
+          asset_content_type: text/plain
+          asset_name: ${{github.ref_name}}_checksum.txt
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
