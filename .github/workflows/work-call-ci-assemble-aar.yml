@@ -39,7 +39,8 @@ jobs:
 
       - name: Create Keystore
         run: |
-          keytool -genkeypair -v -keystore mykeystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias mykey -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass 123456  -keypass 123456
+          keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}}  -keypass ${{secrets.KEY_PASSWORD}}
+      #   keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}}  "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEY_PASSWORD}}
 
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
