@@ -76,15 +76,15 @@ jobs:
           full_path=${{steps.rename_aar_file.outputs.named_file}}
           filename=$(basename "$full_path")
           module_name="${filename/.aar/}"
-          CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
+          CHECKSUM=$(sha256sum "$full_path" | cut -d ' ' -f 1)
           echo "SHA-256 Checksum: $CHECKSUM"
-          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$module_name-checksum.txt
+          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/"$module_name"-checksum.txt
           echo "Checksum file created"
 
-      - name: Create ZIP File 🗜
-        id: zip_file
-        run: |
-          full_path=${{steps.rename_aar_file.outputs.named_file}}
-          filename=$(basename "$full_path")
-          module_name="${filename/.aar/}"
-          zip -r ${module_name}.zip ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$module_name-checksum.txt &full_path
+#      - name: Create ZIP File 🗜
+#        id: zip_file
+#        run: |
+#          full_path=${{steps.rename_aar_file.outputs.named_file}}
+#          filename=$(basename "$full_path")
+#          module_name="${filename/.aar/}"
+#          zip -r ${module_name}.zip ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$module_name-checksum.txt &full_path
