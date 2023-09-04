@@ -65,7 +65,7 @@ jobs:
           file_name=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
           file_result="${file_name/-release/-${{ github.ref_name }}-release}"
           echo "Renaming $file_name to $file_result"
-          mv $file_name \ $file_result
+          mv $file_name $file_result
           echo "::set-output name=named_file::$file_result"
 #      - name: Rename AAR file 📝
 #        run: |
@@ -79,11 +79,13 @@ jobs:
         run: jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{steps.rename_aar_file.named_file}} ${{steps.rename_aar_file.named_file}} key_alias
 
       - name: Calculate SHA-256 Checksum 🔍
+        id: checksum
         run: |
           FILE_PATH=${{steps.rename_aar_file.named_file}}
             CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
             echo "SHA-256 Checksum: $CHECKSUM"
             echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt
+            echo "::set-output name=checksum_file::${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}_checksum.txt"
             echo "Checksum file created"
 
       - name: Upload Generated Android AAR And Checksum File 📤
