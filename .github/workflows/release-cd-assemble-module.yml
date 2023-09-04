@@ -53,7 +53,7 @@ jobs:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_FILES_ID: 'assemble_module'
-      NEW_AAR_FILE_NAME: 'finpay-payment-sdk-${{ github.ref }}-release.aar'
+      NEW_AAR_FILE_NAME: 'finpay-payment-sdk-${{ github.ref_name }}-release.aar'
 
 #  finish:
 #    needs: [ workflow-git_release_upload_files ]
