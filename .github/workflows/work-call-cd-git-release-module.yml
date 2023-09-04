@@ -80,20 +80,16 @@ jobs:
           CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
           echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
           echo "Checksum file created"
+          echo "checksum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT 
 
       - name: Upload Singed AAR CheckSum
         id: upload-arr-checksum
-        run: |
-          full_path=${{steps.rename_aar_file.outputs.named_file}}
-          filename=$(basename "${full_path}")
-          module_name="${filename/.aar/}"
-
         uses: sekwah41/upload-release-assets@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ needs.git_release.outputs.release_url }}
-            asset_path: "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
+            asset_path: ${{steps.checksum.outputs.checksum_file}}
             asset_content_type: text/plain
 
 
