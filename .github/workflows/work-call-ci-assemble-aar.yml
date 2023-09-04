@@ -31,8 +31,12 @@ jobs:
 #            ${{ runner.os }}-gradle-
 
           #SETUP JAVA
-      - name: reading
-        run: echo "Reading some keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}}  -keypass ${{secrets.KEY_PASSWORD}}"
+      - name: Set up secret file
+        env:
+          DEBUG_PASSWORD: ${{ secrets.KEY_STORE_NAME }}
+        run: |
+          echo $DEBUG_PASSWORD >> secrets.txt
+
       - name: Create Keystore
         run: |
           keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}}  -keypass ${{secrets.KEY_PASSWORD}}  
