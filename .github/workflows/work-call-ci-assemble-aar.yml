@@ -32,6 +32,12 @@ jobs:
 
           #SETUP JAVA
 
+      - name: testing
+        run: |
+          full_path="/home/runner/work/ApplyAndroidTest/ApplyAndroidTest/assemble_module/core_module-v1.0.98-release.aar"
+          filename=$(basename "$full_path")
+          module_name="${filename/.aar/}"
+          echo "Calculating checksum for $module_name"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
