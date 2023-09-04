@@ -54,13 +54,11 @@ jobs:
       - name: List downloaded files
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
-
       - name: Rename AAR file 📝
         id: rename_aar_file
         run: |
           file_name=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
           file_result="${file_name/-release/-${{ github.ref_name }}-release}"
-          echo "Renaming $file_name to $file_result"
           mv $file_name $file_result
           echo "named_file=$file_result" >> $GITHUB_OUTPUT  
 
@@ -74,14 +72,10 @@ jobs:
         id: checksum
         run: |
           full_path=${{steps.rename_aar_file.outputs.named_file}}
-          echo "full_path=$full_path" 
           filename=$(basename "${full_path}")
-            echo "filename=$filename"
           module_name="${filename/.aar/}"
-          echo "Calculating checksum for $module_name"
           CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
           echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
-          echo "Checksum file created"
           echo "module_name=$module_name" >> $GITHUB_OUTPUT
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
  
@@ -92,7 +86,8 @@ jobs:
           arr_path=${{steps.rename_aar_file.outputs.named_file}}
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
-          zip -r ${module_name}.zip $arr_path $check_sum_file 
+          cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+          zip -r ${module_name}.zip ${module_name}-checksum.txt
           mv ${module_name}.zip ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/
           echo "zip_file_path=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT  
 
