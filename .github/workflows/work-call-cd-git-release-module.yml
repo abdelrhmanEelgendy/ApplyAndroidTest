@@ -59,18 +59,13 @@ jobs:
         run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
 
-      - name: Find AAR file
-        id: find_aar
-        run: |
-          file_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
-          echo $file_path
-
-
       - name: Rename AAR file 📝
         run: |
-          file_name=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          _result=${{inputs.NEW_AAR_FILE_NAME}}
-          mv file_name \ _result
+          file_name=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
+          file_result="${file_name/-release/-${{ github.ref_name }}-release}"
+          echo "Renaming $file_name to $_result"
+          mv $file_name \ $_result
+          echo "::set-output name=result::$_result"
 #      - name: Rename AAR file 📝
 #        run: |
 #          mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar \
