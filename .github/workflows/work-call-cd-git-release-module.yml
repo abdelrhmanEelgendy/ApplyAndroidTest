@@ -78,5 +78,5 @@ jobs:
           module_name=$(echo "$filename" | cut -d'.' -f1)
           CHECKSUM=$(sha256sum "$FILE_PATH" | cut -d ' ' -f 1)
           echo "SHA-256 Checksum: $CHECKSUM"
-          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{module_name}}_checksum.txt
+          echo "$CHECKSUM" > ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$module_name_checksum.txt
           echo "Checksum file created"
