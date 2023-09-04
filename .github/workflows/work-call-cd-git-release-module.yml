@@ -81,10 +81,26 @@ jobs:
           echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
           echo "Checksum file created"
 
+      - name: Upload Singed AAR CheckSum
+        id: upload-arr-checksum
+        run: |
+          full_path=${{steps.rename_aar_file.outputs.named_file}}
+          filename=$(basename "${full_path}")
+          module_name="${filename/.aar/}"
+
+        uses: sekwah41/upload-release-assets@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ needs.git_release.outputs.release_url }}
+            asset_path: "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
+            asset_content_type: text/plain
+
+
       - name: Create ZIP File 🗜
         id: zip_file
         run: |
           arr_path=${{steps.rename_aar_file.outputs.named_file}}
           filename=$(basename "arr_path")
           module_name="${filename/.aar/}"
-          zip -r ${module_name}.zip $arr_path ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$module_name-checksum.txt
+          zip -r ${module_name}.zip $arr_path ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt
