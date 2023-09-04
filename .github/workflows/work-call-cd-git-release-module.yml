@@ -79,7 +79,7 @@ jobs:
       - name: Sign ARR 🖋
         run: |
           echo my_var ${{steps.rename_aar_file.outputs.named_file}}
-          jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{steps.rename_aar_file.outputs.named_file}} ${{steps.rename_aar_file.outputs.named_file}} key_alias
+          jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{steps.rename_aar_file.outputs.named_file}} key_alias
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
