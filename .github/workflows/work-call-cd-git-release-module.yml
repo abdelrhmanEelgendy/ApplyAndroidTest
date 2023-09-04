@@ -60,7 +60,7 @@ jobs:
 
       - name: Rename AAR file
         run: mv ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{github.ref_name}}-release.aar
+          ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.NEW_AAR_FILE_NAME}}
 
       - name: Upload Generated Android AAR 🗳
         id: upload-release-asset
