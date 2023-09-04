@@ -35,7 +35,7 @@ jobs:
       - name: Set Variables and Replace Text
         run: |
           _test="12345abcABC"
-          _result=%_test:12345=Hello %"
+          _result="%_test:12345=Hello %"
           echo %_result%
       - name: Set up JDK 17
         uses: actions/setup-java@v3
