@@ -79,7 +79,8 @@ jobs:
 
       - name: Create Keystore
         run: |
-          keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -alias ${{secrets.KEY_ALIAS}} "CN=My Key, OU=Example, O=Example, L=City, ST=State, C=US"
+          keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}}  "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEY_PASSWORD}}
+#          keytool -genkeypair -v -keystore mykeystore.jks -keyalg RSA -keysize 2048 -validity 3650 -alias mykey -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass 123456 -keypass 123456
 
 #      - name: Sign ARR
 #        run: |
