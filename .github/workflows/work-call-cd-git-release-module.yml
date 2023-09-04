@@ -63,7 +63,7 @@ jobs:
         id: find_aar
         run: |
           file_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
-          echo "::set-output name=file_path::$file_path"
+          echo $file_path
 
 
       - name: Rename AAR file 📝
