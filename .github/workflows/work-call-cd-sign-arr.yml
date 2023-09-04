@@ -12,6 +12,24 @@ on:
         required: true
 
 jobs:
+  git_release:
+    name: Generate Github Release
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      release_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      - name: Create Release ✅
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
   download_and_rename:
     runs-on: ubuntu-latest
     steps:
