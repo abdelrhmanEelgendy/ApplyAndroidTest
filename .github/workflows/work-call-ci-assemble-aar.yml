@@ -37,6 +37,10 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: Create Keystore
+        run: |
+          keytool -genkeypair -v -keystore mykeystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias mykey -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass 123456  -keypass 123456
+
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
 
