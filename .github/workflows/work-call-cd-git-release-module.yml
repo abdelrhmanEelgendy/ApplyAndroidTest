@@ -75,6 +75,7 @@ jobs:
           upload_url: ${{ needs.git_release.outputs.release_url }}
           asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.NEW_AAR_FILE_NAME}}
           asset_content_type: application/aar
+          asset_name: ${{ inputs.NEW_AAR_FILE_NAME }}
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
