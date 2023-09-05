@@ -29,17 +29,6 @@ jobs:
       release_url: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ inputs.UPLOADED_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-
-      - name: List downloaded files
-        run: |
-         ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-         echo "HEELLLOOO" 
-
       - name: Create Release ✅
         id: create_release
         uses: actions/create-release@v1
@@ -57,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
-      url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
+      url: ${{ steps.upload-arr-checksum.outputs.browser_download_url }}
 
     steps:
       - name: Download artifacts
@@ -76,5 +65,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.zip
+          asset_path: ${{ github.workspace }}/zip_module/**-release.zip
           asset_content_type: application/zip
