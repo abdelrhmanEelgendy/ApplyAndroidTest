@@ -107,10 +107,129 @@ jobs:
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: "$ZIP_FOLDER_NAME"
+          name: ${{ env.ZIP_FOLDER_NAME }}
           path: ${{steps.zip_file.outputs.zip_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ZIP FOLDER AS OUTPUT
         id: assign_zip_folder
         run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
+
+
+
+#name: Sign Arr And Create Zip File 🗳
+##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
+#on:
+#  workflow_call:
+#    secrets:
+#      SLACK_WEBHOOK:
+#        required: true
+#    inputs:
+#      UPLOADED_ARR_FILES_ID:
+#        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+#        type: string
+#        required: true
+#
+#      MODULE_NAME:
+#        description: 'Which module you need to run this flow on...'
+#        type: string
+#        required: true
+#
+#    outputs:
+#      release_url:
+#        description: "Release url link for the zip file."
+#        value: ${{ jobs.sign_arr_and_create_zip.outputs.release_url }}
+#
+#      zip_folder_id:
+#        description: "uploaded zip folder name"
+#        value: ${{ jobs.sign_arr_and_create_zip.outputs.zip_folder_name }}
+#
+#jobs:
+#
+#  sign_arr_and_create_zip:
+#    name: Sign And Zip ARR.
+#    runs-on: ubuntu-latest
+#    env:
+#      ZIP_FOLDER_NAME: "zip_module"
+#      VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
+#
+#    outputs:
+#      release_url: ${{ steps.zip_file.outputs.release_url }}
+#      zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
+#
+#    steps:
+#      - name: Checkout the code 📥
+#        uses: actions/checkout@v3
+#
+#      - name: Set up JDK 17 📦
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'corretto'
+#
+#      - name: Grant execute permission for gradlew 📜
+#        run: chmod +x gradlew
+#
+#      - name: Download artifacts 📥
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: ${{ inputs.UPLOADED_ARR_FILES_ID }}
+#          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+#
+#      - name: List downloaded files 📂
+#        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+#
+#      - name: Rename AAR file 📝
+#        id: renamed_aar_file
+#        run: |
+#          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
+#          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aar"
+#          mv $old_path $new_path
+#          echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
+#
+#      - name: Create Keystore 🔑
+#        run: keytool -genkeypair -v -keystore key_store_name.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key_alias -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass 123456  -keypass 123456
+#
+#      - name: Sign ARR 🖋
+#        run: jarsigner -keystore key_store_name.jks -storepass 123456 -keypass 123456 -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} key_alias
+#
+#      - name: Calculate SHA-256 Checksum 🔍
+#        id: checksum
+#        run: |
+#          full_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
+#          CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
+#          echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt"
+#          echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt" >> $GITHUB_OUTPUT
+#
+#      - name: Create Java DOC Jar 📝
+#        id: dokka_javadoc_jar
+#        run: |
+#          ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+#           old_path=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
+#           new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/$VERSIONED_MODULE_NAME-javadoc.jar"
+#           mv $old_path $new_path
+#           echo "javadoc_path=$new_path" >> $GITHUB_OUTPUT
+#
+#
+#      - name: Create ZIP File 🗜
+#        id: zip_file
+#        run: |
+#          arr_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
+#          check_sum_file=${{steps.checksum.outputs.check_sum_file}}
+#          dokka_javadoc_jar=${{steps.dokka_javadoc_jar.outputs.javadoc_path}}
+#          cd ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+#          zip -j -r $VERSIONED_MODULE_NAME.zip ${arr_path} ${check_sum_file} ${dokka_javadoc_jar}
+#          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
+#          echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
+#
+#      - name: Upload Assembled Zip File As Artifact 📤
+#        # Upload zip to ubuntu server to be used on another action...
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: $ZIP_FOLDER_NAME
+#          path: ${{steps.zip_file.outputs.zip_url}}
+#          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+#
+#      - name: Assign ZIP FOLDER AS OUTPUT
+#        id: assign_zip_folder
+#        run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
