@@ -119,12 +119,12 @@ on:
     outputs:
       release_url:
         description: Release url link for the zip file.
-        value: ${{ jobs.sign_arr_and_create_zip.outputs.url }}
+        value: ${{ jobs.sign_arr_and_create_zip.outputs.release_url }}
 
 jobs:
 
   sign_arr_and_create_zip:
-    name: Upload Generated Artifacts to Git Release.
+    name: Sign And Zip ARR.
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
@@ -174,7 +174,7 @@ jobs:
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
-          echo "url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
+          echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
 #      - name: Upload The Zip File
 #        id: upload-arr-checksum
