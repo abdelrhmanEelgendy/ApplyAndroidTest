@@ -29,6 +29,15 @@ jobs:
       release_url: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.UPLOADED_FILES_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+
+      - name: List downloaded files
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+
       - name: Create Release ✅
         id: create_release
         uses: actions/create-release@v1
