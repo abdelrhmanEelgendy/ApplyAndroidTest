@@ -6,7 +6,7 @@ on:
       SLACK_WEBHOOK:
         required: true
     inputs:
-      UPLOADED_ARR_FOLDER_ID:
+      UPLOADED_ARR_FILES_ID:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
@@ -31,7 +31,6 @@ jobs:
     name: Sign And Zip ARR.
     runs-on: ubuntu-latest
     env:
-      UPLOAD_FOLDER_NAME: "zip_module"
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
 
     outputs:
@@ -101,16 +100,16 @@ jobs:
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
           zip -j -r $VERSIONED_MODULE_NAME.zip ${arr_path} ${check_sum_file} ${dokka_javadoc_jar}
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
-          echo "release_url=${{ github.workspace }}/$UPLOAD_FOLDER_NAME/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
+          echo "release_url=${{ github.workspace }}/zip_module/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
 
       - name: Upload Assembled Zip File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: $UPLOAD_FOLDER_NAME
+          name: zip_module
           path: ${{steps.zip_file.outputs.zip_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ZIP FOLDER AS OUTPUT
         id: assign_zip_folder
-        run: echo "folder_name=$UPLOAD_FOLDER_NAME" >> $GITHUB_OUTPUT
+        run: echo "folder_name=zip_module" >> $GITHUB_OUTPUT
