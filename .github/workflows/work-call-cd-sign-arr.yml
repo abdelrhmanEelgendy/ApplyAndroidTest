@@ -91,8 +91,9 @@ jobs:
           arr_name=$(basename "${arr_path}")
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
+          dokka_javadoc_jar=${{ inputs.MODULE_NAME }}/build/libs/**.jar
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} 
+          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${dokka_javadoc_jar}
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
