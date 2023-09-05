@@ -54,24 +54,15 @@ jobs:
     with:
       UPLOADED_FILES_ID: 'assemble_module'
 
+
   workflow-git_release_upload_files:
     needs: [ workflow-sing-aar ]
-    name: Upload Generated Artifacts to Git Release.
-    runs-on: ubuntu-latest
-    steps:
-      - name: print
-        run: |
-          echo "hello  ${{needs.workflow-sing-aar.outputs.release_url}}"
-      
-
-#  workflow-git_release_upload_files:
-#    needs: [ workflow-sing-aar ]
-#    uses: ./.github/workflows/work-call-cd-git-release-module.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      UPLOADED_FILES_ID: 'assemble_module'
-#      DOWNLOAD_FILE_URL: ${{needs.workflow-git_release_upload_files.outputs.release_url}}
+    uses: ./.github/workflows/work-call-cd-git-release-module.yml
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    with:
+      UPLOADED_FILES_ID: 'assemble_module'
+      DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aar.outputs.release_url}}
 
 
 #  finish:
