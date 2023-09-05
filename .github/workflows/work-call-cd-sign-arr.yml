@@ -78,6 +78,6 @@ jobs:
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: ${{UPLOADED_ZIP_ID}}
+          name: ${{ inputs.UPLOADED_ZIP_ID}}
           path: ${{steps.zip_file.outputs.release_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
