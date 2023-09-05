@@ -31,6 +31,8 @@ jobs:
   sign_arr_and_create_zip:
     name: Sign And Zip ARR.
     runs-on: ubuntu-latest
+    env:
+      VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
     outputs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
 
@@ -60,7 +62,7 @@ jobs:
         id: renamed_aar_file
         run: |
           old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
-          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.MODULE_NAME }}-${{ github.ref_name }}-release.aar"
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aar"
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
@@ -75,15 +77,15 @@ jobs:
         run: |
           full_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
-          echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}-checksum.txt"
-          echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}-checksum.txt" >> $GITHUB_OUTPUT
+          echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt"
+          echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt" >> $GITHUB_OUTPUT
 
       - name: Create HTML DOC Jar 📝
         id: dokka_javadoc_jar
         run: |
          ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
           old_path=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
-          new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/${{inputs.MODULE_NAME}}-${{ github.ref_name }}-javadoc.jar"
+          new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/$VERSIONED_MODULE_NAME-javadoc.jar"
           mv $old_path $new_path
           echo "javadoc_path=$new_path" >> $GITHUB_OUTPUT          
           
@@ -95,9 +97,9 @@ jobs:
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           dokka_javadoc_jar=${{steps.dokka_javadoc_jar.outputs.javadoc_path}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -j -r ${{inputs.MODULE_NAME}}-${{ github.ref_name }}.zip ${arr_path} ${check_sum_file} ${dokka_javadoc_jar}
-          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}.zip" >> $GITHUB_OUTPUT
-          echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}.zip" >> $GITHUB_OUTPUT
+          zip -j -r $VERSIONED_MODULE_NAME.zip ${arr_path} ${check_sum_file} ${dokka_javadoc_jar}
+          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
+          echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
 
       - name: Upload Assembled Zip File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
