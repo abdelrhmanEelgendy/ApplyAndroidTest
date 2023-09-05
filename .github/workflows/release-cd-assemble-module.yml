@@ -1,5 +1,8 @@
 name: FinPay-Payment SDK Release
-
+defaults:
+  run:
+    env:
+      MODULE_NAME2: 'core_module'
 on:
   push:
     tags:
@@ -40,6 +43,8 @@ jobs:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
 #      MODULE_NAME: 'core_module'
+      - name: Build AAR2 ⚙️🛠
+        run: echo "module name2  = $MODULE_NAME2"
       - name: Build AAR ⚙️🛠
         run: echo "module name = $WORK_MODULE_NAME"
 
