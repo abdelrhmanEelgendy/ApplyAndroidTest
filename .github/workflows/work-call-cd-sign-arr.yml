@@ -82,7 +82,14 @@ jobs:
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
 
       - name: Create HTML DOC Jar 📝
-        run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+        id: dokka_javadoc_jar
+        run: |
+         ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+          old_path=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
+          new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/${{inputs.MODULE_NAME}}-${{ github.ref_name }}-javadoc.jar"
+          mv $old_path $new_path
+          echo "javadoc_path=$new_path" >> $GITHUB_OUTPUT          
+          
 
       - name: Create ZIP File 🗜
         id: zip_file
@@ -91,7 +98,7 @@ jobs:
           arr_name=$(basename "${arr_path}")
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
-          dokka_javadoc_jar=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
+          dokka_javadoc_jar=${{steps.dokka_javadoc_jar.outputs.javadoc_path}}
           echo "jar file path: $dokka_javadoc_jar"
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -j -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${dokka_javadoc_jar}
