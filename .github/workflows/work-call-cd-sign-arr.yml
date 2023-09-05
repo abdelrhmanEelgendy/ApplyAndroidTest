@@ -35,16 +35,16 @@ jobs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
 
     steps:
-      - name: Checkout the code
+      - name: Checkout the code 📥
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up JDK 17 📦
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission for gradlew 📜
         run: chmod +x gradlew
 
       - name: Download artifacts 📥
@@ -99,7 +99,7 @@ jobs:
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${{inputs.MODULE_NAME}}-${{ github.ref_name }}.zip" >> $GITHUB_OUTPUT
 
-      - name: Upload Assembled Zip File 📤
+      - name: Upload Assembled Zip File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
