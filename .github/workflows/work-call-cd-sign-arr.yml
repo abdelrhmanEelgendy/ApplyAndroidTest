@@ -122,27 +122,8 @@ on:
         value: ${{ jobs.sign_arr_and_create_zip.outputs.url }}
 
 jobs:
-  git_release:
-    name: Generate Github Release
-    runs-on: ubuntu-latest
-    # Map the job outputs to step outputs
-    outputs:
-      release_url: ${{ steps.create_release.outputs.upload_url }}
-
-    steps:
-      - name: Create Release ✅
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
 
   sign_arr_and_create_zip:
-    needs: [ git_release ]
     name: Upload Generated Artifacts to Git Release.
     runs-on: ubuntu-latest
     outputs:
@@ -193,14 +174,14 @@ jobs:
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
-          echo "zip_file_path=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
+          echo "url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
-      - name: Upload The Zip File
-        id: upload-arr-checksum
-        uses: sekwah41/upload-release-assets@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{steps.zip_file.outputs.zip_file_path}}
-          asset_content_type: application/zip
+#      - name: Upload The Zip File
+#        id: upload-arr-checksum
+#        uses: sekwah41/upload-release-assets@v1.1.0
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ needs.git_release.outputs.release_url }}
+#          asset_path: ${{steps.zip_file.outputs.zip_file_path}}
+#          asset_content_type: application/zip
