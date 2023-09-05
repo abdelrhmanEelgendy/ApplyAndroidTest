@@ -69,12 +69,6 @@ jobs:
           echo "module_name=$module_name" >> $GITHUB_OUTPUT
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
 
-      - name: Generate HTML DOC Jar 📝
-        id: doc_jar
-        run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
-          
-
-
       - name: Create ZIP File 🗜
         id: zip_file
         run: |
@@ -83,7 +77,7 @@ jobs:
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${{ inputs.MODULE_NAME }}/build/libs/**.jar
+          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**.jar
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
