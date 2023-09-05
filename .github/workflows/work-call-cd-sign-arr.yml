@@ -20,6 +20,7 @@ on:
       release_url:
         description: "Release url link for the zip file."
         value: ${{ jobs.sign_arr_and_create_zip.outputs.release_url }}
+
       zip_folder_id:
         description: "uploaded zip folder name"
         value: ${{ jobs.assemble.sign_arr_and_create_zip.outputs.zip_folder_id }}
