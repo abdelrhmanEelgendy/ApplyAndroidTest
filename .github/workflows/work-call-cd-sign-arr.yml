@@ -127,7 +127,7 @@ jobs:
     name: Sign And Zip ARR.
     runs-on: ubuntu-latest
     outputs:
-      url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
+      release_url: ${{ steps.zip_file.outputs.release_url }}
 
     steps:
       - name: Download artifacts
