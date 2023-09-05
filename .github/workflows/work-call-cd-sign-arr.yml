@@ -15,6 +15,12 @@ on:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
+
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
+
     outputs:
       release_url:
         description: "Release url link for the zip file."
@@ -63,9 +69,11 @@ jobs:
           echo "module_name=$module_name" >> $GITHUB_OUTPUT
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
 
-#      - name: Generate HTML Jar DOC 📝
-#        id: jar_doc
-#        run: |
+      - name: Generate HTML DOC Jar 📝
+        id: doc_jar
+        run: |
+         ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+          
 
 
       - name: Create ZIP File 🗜
@@ -76,7 +84,7 @@ jobs:
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
+          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${{ inputs.MODULE_NAME }}/build/libs/**.jar
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 

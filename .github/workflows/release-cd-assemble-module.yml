@@ -54,6 +54,7 @@ jobs:
     with:
       UPLOADED_FILES_ID: 'assemble_module'
       UPLOADED_ZIP_ID: 'zip_module'
+      MODULE_NAME: 'core_module'
 
 
   workflow-git_release_upload_files:
