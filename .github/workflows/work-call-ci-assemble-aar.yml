@@ -47,6 +47,10 @@ jobs:
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
 
+      - name: Generate HTML DOC Jar 📝
+        id: doc_jar
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+
       - name: Build AAR ⚙️🛠
         run: ./gradlew ${{ inputs.MODULE_NAME }}:assembleRelease
 

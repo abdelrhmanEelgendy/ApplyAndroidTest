@@ -71,8 +71,7 @@ jobs:
 
       - name: Generate HTML DOC Jar 📝
         id: doc_jar
-        run: |
-         ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
           
 
 
