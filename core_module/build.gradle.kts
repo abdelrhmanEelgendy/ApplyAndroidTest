@@ -1,6 +1,11 @@
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.dokka")
+
 }
 
 android {
@@ -41,3 +46,49 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
+tasks.withType<DokkaTask>().configureEach {
+    moduleName.set("Payment SDK")
+    moduleVersion.set(project.version.toString())
+    failOnWarning.set(false)
+    suppressObviousFunctions.set(true)
+    suppressInheritedMembers.set(true)
+    offlineMode.set(true)
+
+    dokkaSourceSets {
+        configureEach {
+//            documentedVisibilities.set(setOf(Visibility.PUBLIC))
+            reportUndocumented.set(true)
+            jdkVersion.set(17)
+            noStdlibLink.set(true)
+            noJdkLink.set(true)
+            noAndroidSdkLink.set(true)
+        }
+    }
+}
+
+
+tasks.register<Jar>("dokkaHtmlJar") {
+    dependsOn(tasks.dokkaHtml)
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    archiveClassifier.set("html-docs")
+}
+
+tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+tasks.dokkaHtml {
+    dokkaSourceSets.configureEach {
+        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+//        customAssets = listOf(file("my-image.png"))
+//        customStyleSheets = listOf(file("my-styles.css"))
+            footerMessage = "2023 - Specialized Business Solutions"
+            separateInheritedMembers = false
+//        templatesDir = file("dokka/templates")
+            mergeImplicitExpectActualDeclarations = true
+        }
+    }
+}
+

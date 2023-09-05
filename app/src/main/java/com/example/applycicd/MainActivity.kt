@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.applycicd.ui.theme.ApplyCICDTheme
+import com.example.core_module.MyMainClass
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             ApplyCICDTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
