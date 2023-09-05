@@ -61,7 +61,7 @@ jobs:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_FILES_ID: 'assemble_module'
-      DOWNLOAD_FILE_URL: ${{steps.workflow-git_release_upload_files.outputs.release_url}}
+      DOWNLOAD_FILE_URL: ${{needs.workflow-git_release_upload_files.outputs.release_url}}
 
 
 #  finish:
