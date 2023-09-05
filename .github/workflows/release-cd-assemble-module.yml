@@ -1,7 +1,7 @@
 name: FinPay-Payment SDK Release
 
 env:
-  MODULE_NAME2: 'core_module'
+  WORK_MODULE_NAME: 'core_module'
 
 on:
   push:
@@ -12,8 +12,7 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
-    env:
-      WORK_MODULE_NAME: "core_module"
+
     steps:
       - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
@@ -44,7 +43,7 @@ jobs:
 #    with:
 #      MODULE_NAME: 'core_module'
       - name: Build AAR2 ⚙️🛠
-        run: echo "module name2  = $MODULE_NAME2"
+        run: echo "module name2  = WORK_MODULE_NAME"
       - name: Build AAR ⚙️🛠
         run: echo "module name = $WORK_MODULE_NAME"
 
