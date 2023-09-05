@@ -1,7 +1,5 @@
 name: FinPay-Payment SDK Release
 
-env:
-  WORK_MODULE_NAME: 'core_module'
 
 on:
   push:
@@ -14,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build AAR ⚙️🛠
-        run: echo "module name = $WORK_MODULE_NAME"
 
       - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
@@ -45,17 +41,13 @@ jobs:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
 #      MODULE_NAME: 'core_module'
-      - name: Build AAR2 ⚙️🛠
-        run: echo "module name2  = $one"
-      - name: Build AAR ⚙️🛠
-        run: echo "module name = $WORK_MODULE_NAME"
 
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: "${{ env.WORK_MODULE_NAME }}"
+      MODULE_NAME: 'core_module'
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
@@ -64,7 +56,7 @@ jobs:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_ARR_FOLDER_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
-      MODULE_NAME: "$WORK_MODULE_NAME"
+      MODULE_NAME: 'core_module'
 
 
   workflow-git_release_upload_files:
