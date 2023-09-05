@@ -41,6 +41,9 @@ jobs:
 #    with:
 #      MODULE_NAME: 'core_module'
 
+  workflow-print:
+    run: echo "module name = $WORK_MODULE_NAME"
+
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
