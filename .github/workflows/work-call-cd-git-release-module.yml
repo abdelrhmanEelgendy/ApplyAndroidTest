@@ -49,14 +49,14 @@ jobs:
       url: ${{ steps.upload-arr-checksum.outputs.browser_download_url }}
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ inputs.UPLOADED_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-
-      - name: List downloaded files
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: ${{ inputs.UPLOADED_FILES_ID }}
+#          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+#
+#      - name: List downloaded files
+#        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
       - name: Upload The Zip File
         id: upload-arr-checksum
@@ -65,5 +65,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.zip
+          asset_path: ${{inputs.DOWNLOAD_FILE_URL}}
           asset_content_type: application/zip
