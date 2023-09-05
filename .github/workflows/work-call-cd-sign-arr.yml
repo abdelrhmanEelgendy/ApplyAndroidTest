@@ -70,12 +70,14 @@ jobs:
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
       - name: Checkout the code
         uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'corretto'
-
+      - name: Grant Permission for Gradlew to Execute
+        run: chmod +x ./gradlew
       - name: Generate HTML DOC Jar 📝
         id: doc_jar
         run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
