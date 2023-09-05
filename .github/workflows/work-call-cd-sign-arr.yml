@@ -31,8 +31,9 @@ jobs:
     name: Sign And Zip ARR.
     runs-on: ubuntu-latest
     env:
-      VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
       UPLOAD_FOLDER_NAME: "zip_module"
+      VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
+
     outputs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
       zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
@@ -106,7 +107,7 @@ jobs:
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: "$UPLOAD_FOLDER_NAME"
+          name: $UPLOAD_FOLDER_NAME
           path: ${{steps.zip_file.outputs.zip_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
