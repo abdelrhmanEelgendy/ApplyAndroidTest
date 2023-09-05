@@ -77,6 +77,7 @@ jobs:
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
+          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
       - name: Upload Assembled Zip File 📤
@@ -84,5 +85,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.UPLOADED_ZIP_ID}}
-          path: ${{steps.zip_file.outputs.release_url}}
+          path: ${{steps.zip_file.outputs.zip_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
