@@ -60,6 +60,15 @@ jobs:
       url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
 
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.UPLOADED_FILES_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+
+      - name: List downloaded files
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+
       - name: Upload The Zip File
         id: upload-arr-checksum
         uses: sekwah41/upload-release-assets@v1.1.0
