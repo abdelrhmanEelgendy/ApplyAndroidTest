@@ -61,7 +61,7 @@ jobs:
     steps:
       - name: print
         run: |
-          echo "hello  ${{needs.workflow-git_release_upload_files.outputs.release_url}}"
+          echo "hello  ${{needs.workflow-sing-aar.outputs.release_url}}"
       
 
 #  workflow-git_release_upload_files:
