@@ -52,8 +52,8 @@ jobs:
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.UPLOADED_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+          name: ${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
 
       - name: Upload The Zip File 📤
         id: upload-arr-checksum
