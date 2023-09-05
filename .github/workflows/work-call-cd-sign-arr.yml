@@ -107,7 +107,7 @@ jobs:
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: $ZIP_FOLDER_NAME
+          name: "$ZIP_FOLDER_NAME"
           path: ${{steps.zip_file.outputs.zip_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
