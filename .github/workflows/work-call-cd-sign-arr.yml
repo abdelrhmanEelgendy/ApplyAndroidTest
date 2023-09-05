@@ -6,7 +6,7 @@ on:
       SLACK_WEBHOOK:
         required: true
     inputs:
-      UPLOADED_FILES_ID:
+      UPLOADED_ARR_FILES_ID:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
@@ -52,17 +52,17 @@ jobs:
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.UPLOADED_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+          name: ${{ inputs.UPLOADED_ARR_FILES_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
 
       - name: List downloaded files 📂
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
 
       - name: Rename AAR file 📝
         id: renamed_aar_file
         run: |
-          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
-          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aar"
+          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aar"
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
@@ -77,8 +77,8 @@ jobs:
         run: |
           full_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           CHECKSUM=$(sha256sum "${full_path}" | cut -d ' ' -f 1)
-          echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt"
-          echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt" >> $GITHUB_OUTPUT
+          echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt"
+          echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-checksum.txt" >> $GITHUB_OUTPUT
 
       - name: Create HTML DOC Jar 📝
         id: dokka_javadoc_jar
@@ -96,9 +96,9 @@ jobs:
           arr_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           dokka_javadoc_jar=${{steps.dokka_javadoc_jar.outputs.javadoc_path}}
-          cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+          cd ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
           zip -j -r $VERSIONED_MODULE_NAME.zip ${arr_path} ${check_sum_file} ${dokka_javadoc_jar}
-          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
+          echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
 
       - name: Upload Assembled Zip File As Artifact 📤

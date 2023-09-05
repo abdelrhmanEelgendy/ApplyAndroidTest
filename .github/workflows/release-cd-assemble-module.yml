@@ -9,6 +9,8 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
+    env:
+      WORK_MODULE_NAME: "core_module"
     steps:
       - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
@@ -44,7 +46,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: $WORK_MODULE_NAME
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
@@ -52,9 +54,9 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_FILES_ID: 'assemble_module'
+      UPLOADED_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
       UPLOADED_ZIP_ID: 'zip_module'
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: $WORK_MODULE_NAME
 
 
   workflow-git_release_upload_files:

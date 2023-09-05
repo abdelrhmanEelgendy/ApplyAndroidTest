@@ -11,10 +11,17 @@ on:
         type: string
         required: true
 
+    outputs:
+      arr_folder_id:
+        description: "uploaded arr folder name"
+        value: ${{ jobs.assemble.outputs.release_url }}
+
 jobs:
   assemble:
     name: Assemble Android Module AAR
     runs-on: ubuntu-latest
+    outputs:
+      release_url: ${{ steps.assign_arr_folder.outputs.release_url }}
     steps:
 
       - name: Checkout the code
@@ -61,6 +68,11 @@ jobs:
           name: assemble_module
           path: ${{ inputs.MODULE_NAME }}/build/outputs/aar/**-release.aar
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - name: Assign ARR FOLDER AS OUTPUT
+        id: assign_arr_folder
+        run: echo "release_url=assemble_module" >> $GITHUB_OUTPUT
+
 
 #      - name: Ping Slack Assemble Module AAR Failed
 #        uses: someimportantcompany/github-actions-slack-message@v1
