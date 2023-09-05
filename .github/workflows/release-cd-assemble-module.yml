@@ -56,12 +56,16 @@ jobs:
 
   workflow-git_release_upload_files:
     needs: [ workflow-sing-aar ]
-    uses: ./.github/workflows/work-call-cd-git-release-module.yml
-    secrets:
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      UPLOADED_FILES_ID: 'assemble_module'
-      DOWNLOAD_FILE_URL: ${{needs.workflow-git_release_upload_files.outputs.release_url}}
+    run: |
+      echo "hello  ${{needs.workflow-git_release_upload_files.outputs.release_url}}"
+#  workflow-git_release_upload_files:
+#    needs: [ workflow-sing-aar ]
+#    uses: ./.github/workflows/work-call-cd-git-release-module.yml
+#    secrets:
+#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#    with:
+#      UPLOADED_FILES_ID: 'assemble_module'
+#      DOWNLOAD_FILE_URL: ${{needs.workflow-git_release_upload_files.outputs.release_url}}
 
 
 #  finish:

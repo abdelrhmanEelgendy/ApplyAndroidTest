@@ -10,7 +10,6 @@ on:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
-
       DOWNLOAD_FILE_URL:
         description: 'The zip file url'
         type: string
