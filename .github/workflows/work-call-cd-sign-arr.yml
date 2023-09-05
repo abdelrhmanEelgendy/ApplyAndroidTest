@@ -35,6 +35,18 @@ jobs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
 
     steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
@@ -68,18 +80,8 @@ jobs:
           echo "$CHECKSUM" > "${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt"
           echo "module_name=$module_name" >> $GITHUB_OUTPUT
           echo "check_sum_file=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}-checksum.txt" >> $GITHUB_OUTPUT
-      - name: Checkout the code
-        uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Grant Permission for Gradlew to Execute
-        run: chmod +x ./gradlew
-      - name: Generate HTML DOC Jar 📝
-        id: doc_jar
+      - name: Create HTML DOC Jar 📝
         run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
 
       - name: Create ZIP File 🗜
@@ -90,7 +92,7 @@ jobs:
           module_name=${{steps.checksum.outputs.module_name}}
           check_sum_file=${{steps.checksum.outputs.check_sum_file}}
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**.jar
+          zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name} 
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
 
