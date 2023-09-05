@@ -6,7 +6,7 @@ on:
       SLACK_WEBHOOK:
         required: true
     inputs:
-      UPLOADED_FILES_ID:
+      UPLOADED_ZIP_FOLDER_ID:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
