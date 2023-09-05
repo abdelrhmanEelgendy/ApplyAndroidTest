@@ -55,7 +55,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_ARR_FOLDER_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
+      UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
       MODULE_NAME: 'core_module'
 
 
