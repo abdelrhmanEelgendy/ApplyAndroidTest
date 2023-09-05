@@ -175,14 +175,14 @@ jobs:
           cd ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
           zip -r ${module_name}.zip ${module_name}-checksum.txt ${arr_name}
           echo "release_url=${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/${module_name}.zip" >> $GITHUB_OUTPUT
-          ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+          
 
       - name: Upload Assembled Zip
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
           name: assemble_module
-          path: ${{steps.zip_file.outputs.zip_file_path}}
+          path: ${{steps.zip_file.outputs.release_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 #      - name: Upload The Zip File
 #        id: upload-arr-checksum
