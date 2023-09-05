@@ -40,10 +40,8 @@ jobs:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
 #      MODULE_NAME: 'core_module'
-
-  workflow-print:
-    uses: ./.github/workflows/work-call-ci-assemble-aar.yml
-    run: echo "module name = $WORK_MODULE_NAME"
+      - name: Build AAR ⚙️🛠
+        run: echo "module name = $WORK_MODULE_NAME"
 
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
