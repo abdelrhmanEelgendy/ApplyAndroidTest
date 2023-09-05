@@ -10,29 +10,6 @@ jobs:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the code 📥
-        uses: actions/checkout@v3
-
-      - name: Cache JDK and Gradle
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            ~/jdk
-          key: ${{ runner.os }}-jdk-gradle-${{ hashFiles('**/*.gradle*', '**/*.java') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Set up JDK 17 📦
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-
-      - name: Grant execute permission for gradlew 📜
-        run: chmod +x gradlew
-
       - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
         with:

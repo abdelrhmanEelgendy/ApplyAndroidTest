@@ -35,17 +35,17 @@ jobs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
 
     steps:
-#      - name: Checkout the code 📥
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17 📦
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#
-#      - name: Grant execute permission for gradlew 📜
-#        run: chmod +x gradlew
+      - name: Checkout the code 📥
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17 📦
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew 📜
+        run: chmod +x gradlew
 
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
