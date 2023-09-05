@@ -23,7 +23,7 @@ on:
 
       zip_folder_id:
         description: "uploaded zip folder name"
-        value: ${{ jobs.assemble.sign_arr_and_create_zip.outputs.zip_folder_id }}
+        value: ${{ jobs.sign_arr_and_create_zip.outputs.zip_folder_name }}
 
 jobs:
 
@@ -34,7 +34,7 @@ jobs:
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
     outputs:
       release_url: ${{ steps.zip_file.outputs.release_url }}
-      zip_folder_id: ${{ steps.assign_zip_folder.outputs.folder_name }}
+      zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
 
     steps:
       - name: Checkout the code 📥
