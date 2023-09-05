@@ -36,7 +36,9 @@ jobs:
           path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
 
       - name: List downloaded files
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+        run: |
+         ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+         echo "HEELLLOOO" 
 
       - name: Create Release ✅
         id: create_release
