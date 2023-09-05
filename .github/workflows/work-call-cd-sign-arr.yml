@@ -181,7 +181,7 @@ jobs:
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: zip_module
+          name: assemble_module
           path: ${{steps.zip_file.outputs.zip_file_path}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 #      - name: Upload The Zip File
