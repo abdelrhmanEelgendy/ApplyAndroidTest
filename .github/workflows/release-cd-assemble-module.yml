@@ -1,14 +1,14 @@
 name: FinPay-Payment SDK Release
-defaults:
-  run:
-    env:
-      MODULE_NAME2: 'core_module'
+
 on:
   push:
     tags:
       - 'v*'
 
 jobs:
+  build:
+    env:
+      MODULE_NAME2: '11'
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
