@@ -53,6 +53,7 @@ jobs:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       UPLOADED_FILES_ID: 'assemble_module'
+      UPLOADED_ZIP_ID: 'zip_module'
 
 
   workflow-git_release_upload_files:
@@ -61,7 +62,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_FILES_ID: 'assemble_module'
+      UPLOADED_FILES_ID: 'zip_module'
       DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aar.outputs.release_url}}
 
 

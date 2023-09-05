@@ -11,6 +11,10 @@ on:
         type: string
         required: true
 
+      UPLOADED_ZIP_ID:
+        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+        type: string
+        required: true
     outputs:
       release_url:
         description: "Release url link for the zip file."
@@ -74,6 +78,6 @@ jobs:
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: assemble_module
+          name: ${{UPLOADED_ZIP_ID}}
           path: ${{steps.zip_file.outputs.release_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
