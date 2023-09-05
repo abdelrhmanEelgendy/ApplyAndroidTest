@@ -65,5 +65,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{inputs.DOWNLOAD_FILE_URL}}
+          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.zip
           asset_content_type: application/zip
