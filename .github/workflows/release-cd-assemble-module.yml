@@ -65,7 +65,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_ZIP_FOLDER_ID: ${{needs.workflow-sing-aar.outputs.zip_folder_id}}
+      UPLOADED_ZIP_FOLDER_ID: "aalmdfbjkasbdvjibidv"
       DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aar.outputs.release_url}}
 
 
