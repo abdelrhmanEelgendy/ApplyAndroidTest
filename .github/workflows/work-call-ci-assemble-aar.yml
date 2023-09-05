@@ -60,7 +60,6 @@ jobs:
         with:
           name: assemble_module
           path: ${{ inputs.MODULE_NAME }}/build/outputs/aar/**-release.aar
-#          ${{ inputs.MODULE_NAME }}/build/libs/**.jar
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
 #      - name: Ping Slack Assemble Module AAR Failed
