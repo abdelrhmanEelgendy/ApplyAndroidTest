@@ -54,6 +54,11 @@ jobs:
     uses: ./.github/workflows/work-call-cd-sign-arr.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_STORE: ${{ secrets.KEY_STORE }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
     with:
       UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
       MODULE_NAME: 'core_module'
