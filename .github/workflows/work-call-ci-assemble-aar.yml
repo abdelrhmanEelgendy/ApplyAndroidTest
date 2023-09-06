@@ -58,12 +58,7 @@ jobs:
         uses: akiojin/decode-base64-github-action@v0.1.0
         with:
           base64: ${{secrets.KEY_STORE_FILE}}}
-
-#
-#
-#      - name : Decrypt Key Store Value 🔑
-#        run: |
-#          echo ${{ secrets.KEY_STORE_FILE }} | base64 -d > my_key.jks
+          output-path: ${{ runner.temp }}/tmp.jks
 
 
       - name : Print Key Store Value 🔑
