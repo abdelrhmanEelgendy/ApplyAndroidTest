@@ -86,18 +86,20 @@ jobs:
 #      - name: Sign ARR 🖋
 #        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
-      - name : Decrypt Key Store Value 🔑
-        run: |
-          echo "${{ secrets.KEY_STORE_FILE }}" | base64 -d > ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/my_key.jks
+      - name: Decrypt Key Store Value 🔑
+        id: decode-base64
+        uses: akiojin/decode-base64-github-action@v0.1.0
+        with:
+          base64: ${{secrets.KEY_STORE_FILE}}}
+          output-path: ${{ runner.temp }}/tmp.jks
 
 
       - name : Print Key Store Value 🔑
         run: |
-          ls ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
-          cat ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/my_key.jks
+          cat ${{ steps.decode-base64.outputs.output-path }}
 
       - name : Sign ARR Using Decrypted Key Store 🔑
-        run: jarsigner -keystore ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/my_key.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+        run: jarsigner -keystore ${{ steps.decode-base64.outputs.output-path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
