@@ -100,7 +100,7 @@ jobs:
           cat ${{ steps.decode-base64.outputs.key_store_path }}
 
       - name : Sign ARR Using Decrypted Key Store 🔑
-        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass 123456 -keypass 123456 -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} key_alias
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
