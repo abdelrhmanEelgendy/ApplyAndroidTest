@@ -91,9 +91,7 @@ jobs:
           echo "${{ secrets.KEY_STORE_FILE }} | base64 -d > ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/${{secrets.KEY_STORE_NAME}}"
 
       - name : Sign ARR Using Decrypted Key Store 🔑
-        run: |
-#          cd ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
-          jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
