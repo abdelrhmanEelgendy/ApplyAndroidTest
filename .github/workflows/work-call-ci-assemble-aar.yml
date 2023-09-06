@@ -57,7 +57,7 @@ jobs:
         id: decode-base64
         uses: akiojin/decode-base64-github-action@v0.1.0
         with:
-          base64: ${{secret.KEY_STORE_FILE}}}
+          base64: ${{secrets.KEY_STORE_FILE}}}
 
 #
 #
