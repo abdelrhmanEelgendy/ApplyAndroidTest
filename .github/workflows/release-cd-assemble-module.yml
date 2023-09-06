@@ -10,6 +10,8 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
+    env:
+      MODULE_NAME: "zip_module"
 
     steps:
 
@@ -47,7 +49,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: ${{env.MODULE_NAME}}
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
