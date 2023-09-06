@@ -1,7 +1,5 @@
 name: FinPay-Payment SDK Release
 
-env:
-  MODULE_NAME: "core_module"
 
 on:
   push:
@@ -50,7 +48,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: ${{env.MODULE_NAME}}
+      MODULE_NAME: "core_module"
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
