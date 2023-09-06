@@ -20,6 +20,8 @@ jobs:
   assemble:
     name: Assemble Android Module AAR
     runs-on: ubuntu-latest
+    env:
+      ARR_FOLDER_NAME: "assemble_module"
     outputs:
       folder_name: ${{ steps.assign_arr_folder.outputs.folder_name }}
     steps:
@@ -65,13 +67,13 @@ jobs:
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: assemble_module
+          name: ${{ env.ARR_FOLDER_NAME }}
           path: ${{ inputs.MODULE_NAME }}/build/outputs/aar/**-release.aar
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ARR FOLDER AS OUTPUT
         id: assign_arr_folder
-        run: echo "folder_name=assemble_module" >> $GITHUB_OUTPUT
+        run: echo "folder_name=$ARR_FOLDER_NAME" >> $GITHUB_OUTPUT
 
 
 #      - name: Ping Slack Assemble Module AAR Failed
