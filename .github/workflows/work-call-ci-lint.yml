@@ -39,11 +39,11 @@ jobs:
           name: lint_report
           path: ${{ inputs.MODULE_NAME }}/build/reports/lint-results-*
 
-#      - name: Ping Slack Android Lint Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Android Lint failed*
-#          color: failure
+      - name: Ping Slack Android Lint Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Android Lint failed*
+          color: failure

@@ -10,12 +10,11 @@ on:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
-
       DOWNLOAD_FILE_URL:
         description: 'The generated zip file url'
         type: string
         required: true
-
+    # Map the workflow outputs to job outputs
     outputs:
       release_url:
         description: Release url link for the zip file.
@@ -45,15 +44,19 @@ jobs:
     needs: [ git_release ]
     name: Upload Generated Artifacts to Git Release.
     runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
     outputs:
-      url: ${{ steps.upload-arr-checksum.outputs.browser_download_url }}
+      url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
 
     steps:
-      - name: Download artifacts 📥
+      - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
           name: ${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
           path: ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+
+      - name: List downloaded files
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
 
       - name: Upload The Zip File 📤
         id: upload-arr-checksum
@@ -64,3 +67,12 @@ jobs:
           upload_url: ${{ needs.git_release.outputs.release_url }}
           asset_path: ${{inputs.DOWNLOAD_FILE_URL}}
           asset_content_type: application/zip
+
+      - name: Ping Slack Assemble Module AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Assemble Android-module AAR failed*
+          color: failure

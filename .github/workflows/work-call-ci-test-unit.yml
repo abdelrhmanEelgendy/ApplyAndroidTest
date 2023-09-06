@@ -39,11 +39,11 @@ jobs:
           name: unit_test_report
           path: ${{ inputs.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
 
-#      - name: Ping Slack Unit-test Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Unit-test failed*
-#          color: failure
+      - name: Ping Slack Unit-test Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Unit-test failed*
+          color: failure

@@ -1,5 +1,5 @@
 name: Sign Arr And Create Zip File 🗳
-#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
+
 on:
   workflow_call:
     secrets:
@@ -7,24 +7,21 @@ on:
         required: true
       KEY_ALIAS:
         required: true
-      KEY_STORE:
-        required: true
-      KEY_STORE_NAME:
-        required: true
       KEYSTORE_PASSWORD:
         required: true
       KEY_PASSWORD:
         required: true
-      KEY_STORE_FILE:
+      KEY_STORE_FILE_CONTENT:
         required: true
+
     inputs:
       UPLOADED_ARR_FILES_ID:
-        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release.. '
         type: string
         required: true
 
       MODULE_NAME:
-        description: 'Which module you need to run this flow on...'
+        description: 'Which module you need to run this flow on..'
         type: string
         required: true
 
@@ -37,11 +34,13 @@ on:
         description: "uploaded zip folder name"
         value: ${{ jobs.sign_arr_and_create_zip.outputs.zip_folder_name }}
 
+
 jobs:
 
   sign_arr_and_create_zip:
     name: Sign And Zip ARR.
     runs-on: ubuntu-latest
+
     env:
       ZIP_FOLDER_NAME: "zip_module"
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
@@ -80,23 +79,13 @@ jobs:
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
-#      - name: Create Keystore 🔑
-#        run: keytool -genkeypair -v -keystore ${{ secrets.KEY_STORE }} -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEY_ALIAS }} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }}  -keypass ${{ secrets.KEY_PASSWORD }}
-#
-#      - name: Sign ARR 🖋
-#        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
-
       - name: Decode Key Store Value 🔑
         id: decode-base64
         run: |
-          echo "${{secrets.KEY_STORE_FILE}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
+          echo "${{secrets.KEY_STORE_FILE_CONTENT}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
           echo "key_store_path=${{ runner.temp }}/tmp.jks" >> $GITHUB_OUTPUT
 
-      - name : Print Key Store Value 🔑
-        run: |
-          cat ${{ steps.decode-base64.outputs.key_store_path }}
-
-      - name : Sign ARR Using Decrypted Key Store 🔑
+      - name : Sign ARR Using Decoded Key Store 🔑
         run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
       - name: Calculate SHA-256 Checksum 🔍
@@ -110,12 +99,12 @@ jobs:
       - name: Create Java DOC Jar 📝
         id: dokka_javadoc_jar
         run: |
-         ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
-          old_path=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
-          new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/$VERSIONED_MODULE_NAME-javadoc.jar"
-          mv $old_path $new_path
-          echo "javadoc_path=$new_path" >> $GITHUB_OUTPUT          
-          
+          ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
+           old_path=${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/**.jar
+           new_path="${{ github.workspace }}/${{ inputs.MODULE_NAME }}/build/libs/$VERSIONED_MODULE_NAME-javadoc.jar"
+           mv $old_path $new_path
+           echo "javadoc_path=$new_path" >> $GITHUB_OUTPUT              
+
 
       - name: Create ZIP File 🗜
         id: zip_file
@@ -128,6 +117,7 @@ jobs:
           echo "zip_url=${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME.zip" >> $GITHUB_OUTPUT
 
+
       - name: Upload Assembled Zip File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
@@ -139,4 +129,3 @@ jobs:
       - name: Assign ZIP FOLDER AS OUTPUT
         id: assign_zip_folder
         run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
-

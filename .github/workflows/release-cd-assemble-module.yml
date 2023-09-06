@@ -1,6 +1,5 @@
 name: FinPay-Payment SDK Release
 
-
 on:
   push:
     tags:
@@ -10,10 +9,7 @@ jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
-
-
     steps:
-
       - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
         with:
@@ -47,10 +43,8 @@ jobs:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      KEY_STORE_FILE: ${{ secrets.KEY_STORE_FILE }}
-
     with:
-      MODULE_NAME: "core_module"
+      MODULE_NAME: 'core_module'
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
@@ -58,12 +52,9 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_STORE: ${{ secrets.KEY_STORE }}
+      KEY_STORE_FILE_CONTENT: ${{ secrets.KEY_STORE_FILE }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      KEY_STORE_FILE: ${{ secrets.KEY_STORE_FILE }}
-      KEY_STORE_NAME: ${{ secrets.KEY_STORE_NAME }}
-
     with:
       UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
       MODULE_NAME: 'core_module'
@@ -78,27 +69,26 @@ jobs:
       UPLOADED_ZIP_FOLDER_ID: ${{needs.workflow-sing-aar.outputs.zip_folder_id}}
       DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aar.outputs.release_url}}
 
+  finish:
+    needs: [ workflow-git_release_upload_files ]
+    name: Finish Deploy Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Slack Test & Deploy AAR Finished Successfully
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: success()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *A New release AAR Uploaded Successfully*
+            ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
+          color: success
 
-#  finish:
-#    needs: [ workflow-git_release_upload_files ]
-#    name: Finish Deploy Workflow
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Ping Slack Test & Deploy AAR Finished Successfully
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: success()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *A New release AAR Uploaded Successfully*
-#            ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
-#          color: success
-#
-#      - name: Ping Slack Test & Deploy Android AAR Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *A new Release failed*
-#          color: failure
+      - name: Ping Slack Test & Deploy Android AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *A new Release failed*
+          color: failure

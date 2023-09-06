@@ -5,8 +5,6 @@ on:
     secrets:
       SLACK_WEBHOOK:
         required: true
-      KEY_STORE_FILE:
-        required: true
     inputs:
       MODULE_NAME:
         description: 'Which module you need to run this flow on...'
@@ -17,7 +15,6 @@ on:
       arr_folder_id:
         description: "uploaded arr folder name"
         value: ${{ jobs.assemble.outputs.folder_name }}
-
 jobs:
   assemble:
     name: Assemble Android Module AAR
@@ -27,28 +24,21 @@ jobs:
     outputs:
       folder_name: ${{ steps.assign_arr_folder.outputs.folder_name }}
     steps:
-
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      - listFiles:
-          run: ls app
-
-#        #BUILD  CACHING
-#      - name: Cache Gradle dependencies
-#        uses: actions/cache@v2
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#          restore-keys: |
-#            ${{ runner.os }}-gradle-
+        #BUILD  CACHING
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
           #SETUP JAVA
-
-
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -57,10 +47,6 @@ jobs:
 
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
-
-#      - name: Generate HTML DOC Jar 📝
-#        id: doc_jar
-#        run: ./gradlew ${{ inputs.MODULE_NAME }}:dokkaJavadocJar
 
       - name: Build AAR ⚙️🛠
         run: ./gradlew ${{ inputs.MODULE_NAME }}:assembleRelease
@@ -77,12 +63,12 @@ jobs:
         id: assign_arr_folder
         run: echo "folder_name=$ARR_FOLDER_NAME" >> $GITHUB_OUTPUT
 
+      - name: Ping Slack Assemble Module AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Assemble Android-module AAR failed*
+          color: failure
 
-#      - name: Ping Slack Assemble Module AAR Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Assemble Android-module AAR failed*
-#          color: failure
