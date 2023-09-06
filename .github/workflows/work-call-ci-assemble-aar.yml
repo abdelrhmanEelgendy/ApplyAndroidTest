@@ -53,18 +53,18 @@ jobs:
           distribution: 'corretto'
 
 
-      - name: Decrypt Key Store Value 🔑
+      - name: Decode Key Store Value 🔑
         id: decode-base64
-        uses: akiojin/decode-base64-github-action@v0.1.0
-        with:
-          base64: ${{secrets.KEY_STORE_FILE}}}
-          output-path: ${{ runner.temp }}/tmp.jks
+        run: |
+          echo "${{secrets.KEY_STORE_FILE}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
+          echo "key_store_path=${{ runner.temp }}/tmp.jks" >> $GITHUB_OUTPUT
+
+
 
 
       - name : Print Key Store Value 🔑
         run: |
-          cat ${{ steps.decode-base64.outputs.output-path }}
-      #   keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}}  "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEY_PASSWORD}}
+          cat ${{ steps.decode-base64.outputs.key_store_path }}
 
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
