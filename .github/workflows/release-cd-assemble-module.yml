@@ -5,7 +5,9 @@ on:
   push:
     tags:
       - 'v*'
-
+      -
+env: # Define MODULE_NAME as an environment variable at the workflow level
+  MODULE_NAME: "core_module"
 jobs:
   start:
     name: Start Deploy Workflow
