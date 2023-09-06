@@ -5,14 +5,11 @@ on:
   push:
     tags:
       - 'v*'
-      -
-env: # Define MODULE_NAME as an environment variable at the workflow level
-  MODULE_NAME: "core_module"
+
 jobs:
   start:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
-
 
 
     steps:
@@ -51,7 +48,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: ${{env.MODULE_NAME}}
+      MODULE_NAME: "core_module"
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
@@ -62,6 +59,8 @@ jobs:
       KEY_STORE: ${{ secrets.KEY_STORE }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_STORE_FILE: ${{ secrets.KEY_STORE_FILE }}
+      KEY_STORE_NAME: ${{ secrets.KEY_STORE_NAME }}
 
     with:
       UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}

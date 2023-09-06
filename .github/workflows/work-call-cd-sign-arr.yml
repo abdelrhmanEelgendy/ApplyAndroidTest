@@ -9,9 +9,13 @@ on:
         required: true
       KEY_STORE:
         required: true
+      KEY_STORE_NAME:
+        required: true
       KEYSTORE_PASSWORD:
         required: true
       KEY_PASSWORD:
+        required: true
+      KEY_STORE_FILE:
         required: true
     inputs:
       UPLOADED_ARR_FILES_ID:
@@ -76,11 +80,20 @@ jobs:
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
-      - name: Create Keystore 🔑
-        run: keytool -genkeypair -v -keystore ${{ secrets.KEY_STORE }} -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEY_ALIAS }} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }}  -keypass ${{ secrets.KEY_PASSWORD }}
+#      - name: Create Keystore 🔑
+#        run: keytool -genkeypair -v -keystore ${{ secrets.KEY_STORE }} -keyalg RSA -keysize 2048 -validity 10000 -alias ${{ secrets.KEY_ALIAS }} -dname "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{ secrets.KEYSTORE_PASSWORD }}  -keypass ${{ secrets.KEY_PASSWORD }}
+#
+#      - name: Sign ARR 🖋
+#        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
-      - name: Sign ARR 🖋
-        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+      - name : Decrypt Key Store Value 🔑
+        run: |
+          echo "${{ secrets.KEY_STORE_FILE }} | base64 -d > ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/${{secrets.KEY_STORE_NAME}}"
+
+      - name : Sign ARR Using Decrypted Key Store 🔑
+        run: |
+          cd ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+          jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
