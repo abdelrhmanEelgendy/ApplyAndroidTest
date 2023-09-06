@@ -47,6 +47,8 @@ jobs:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      KEY_STORE_FILE: ${{ secrets.KEY_STORE_FILE }}
+
     with:
       MODULE_NAME: "core_module"
 

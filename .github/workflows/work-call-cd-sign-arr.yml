@@ -88,7 +88,7 @@ jobs:
 
       - name : Decrypt Key Store Value 🔑
         run: |
-          echo "${{ secrets.KEY_STORE_FILE }} | base64 -d > ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/my_key.jks"
+          echo "${{ secrets.KEY_STORE_FILE }}" | base64 -d > ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/my_key.jks
 
 
       - name : Print Key Store Value 🔑
