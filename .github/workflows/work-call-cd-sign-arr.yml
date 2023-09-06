@@ -86,20 +86,19 @@ jobs:
 #      - name: Sign ARR 🖋
 #        run: jarsigner -keystore ${{ secrets.KEY_STORE }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
-      - name: Decrypt Key Store Value 🔑
+      - name: Decode Key Store Value 🔑
         id: decode-base64
-        uses: akiojin/decode-base64-github-action@v0.1.0
-        with:
-          base64: ${{secrets.KEY_STORE_FILE}}}
-          output-path: ${{ runner.temp }}/tmp.jks
+        run: |
+          echo "${{secrets.KEY_STORE_FILE}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
+        
 
 
       - name : Print Key Store Value 🔑
         run: |
-          cat ${{ steps.decode-base64.outputs.output-path }}
+          cat ${{ runner.temp }}/tmp.jks
 
       - name : Sign ARR Using Decrypted Key Store 🔑
-        run: jarsigner -keystore ${{ steps.decode-base64.outputs.output-path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+        run: jarsigner -keystore ${{ runner.temp }}/tmp.jks -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
       - name: Calculate SHA-256 Checksum 🔍
         id: checksum
