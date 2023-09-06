@@ -51,7 +51,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: $MODULE_NAME
+      MODULE_NAME: ${{env.MODULE_NAME}}
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
