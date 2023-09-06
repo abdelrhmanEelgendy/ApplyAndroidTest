@@ -52,15 +52,15 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name : Decrypt Key Store Value 🔑
-        run: |
-          echo ${{ secrets.KEY_STORE_FILE }} | base64 -d > my_key.jks
-
-
-      - name : Print Key Store Value 🔑
-        run: |
-          cat my_key.jks
-      #   keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}}  "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEY_PASSWORD}}
+#      - name : Decrypt Key Store Value 🔑
+#        run: |
+#          echo ${{ secrets.KEY_STORE_FILE }} | base64 -d > my_key.jks
+#
+#
+#      - name : Print Key Store Value 🔑
+#        run: |
+#          cat my_key.jks
+#      #   keytool -genkeypair -v -keystore ${{secrets.KEY_STORE_NAME}}.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ${{secrets.KEY_ALIAS}}  "CN=Your Name, OU=Your Organizational Unit, O=Your Organization, L=Your Locality, ST=Your State, C=Your Country" -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEY_PASSWORD}}
 
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
