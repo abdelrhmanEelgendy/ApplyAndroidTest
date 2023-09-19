@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARR_FOLDER_NAME }}
-          path: ${{ inputs.MODULE_NAME }}/build/outputs/bundle/release/**-release.abb
+          path: ${{ inputs.MODULE_NAME }}/build/outputs/bundle/release/**-release.aab
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ARR FOLDER AS OUTPUT
