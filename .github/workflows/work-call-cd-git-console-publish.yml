@@ -1,0 +1,64 @@
+name: Publish Signed ABB To Google Play
+
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
+      KEY:
+        required: true
+    inputs:
+      UPLOADED_ZIP_FOLDER_ID:
+        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+        type: string
+        required: true
+      DOWNLOAD_FILE_URL:
+        description: 'The generated zip file url'
+        type: string
+        required: true
+    # Map the workflow outputs to job outputs
+    outputs:
+      release_url:
+        description: Release url link for the zip file.
+        value: ${{ jobs.upload_matrix_artifacts.outputs.url }}
+
+jobs:
+  git_release:
+    name: Generate Github Release
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+
+
+    outputs:
+        release_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+
+      - name: List downloaded files
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+
+      - name: Create Release On Google Play ✅
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{secrets.KEY}}
+          packageName: com.example.MyApp
+          releaseFiles:  ${{inputs.DOWNLOAD_FILE_URL}}
+          track: Internal Testing
+          status: inProgress
+          inAppUpdatePriority: 2
+          whatsNewDirectory: distribution/whatsnew
+
+      - name: Ping Slack Assemble Module AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Assemble Android-module AAR failed*
+          color: failure
+
