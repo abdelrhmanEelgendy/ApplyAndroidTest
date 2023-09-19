@@ -21,7 +21,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core_module'
+#      MODULE_NAME: 'app'
 #
 #  workflow-test-unit:
 #    needs: [ workflow-lint ]
@@ -29,7 +29,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core_module'
+#      MODULE_NAME: 'app'
 #
 #  workflow-test-android:
 #    needs: [ workflow-lint ]
@@ -37,14 +37,14 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core_module'
+#      MODULE_NAME: 'app'
 
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-bundle.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: 'app'
 
   workflow-sing-aar:
     needs: [ workflow-assemble-aar ]
@@ -57,7 +57,7 @@ jobs:
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
     with:
       UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: 'app'
 
 
   workflow-git_release_upload_files:
