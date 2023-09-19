@@ -75,7 +75,7 @@ jobs:
         id: renamed_aar_file
         run: |
           old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aab' -print -quit)
-          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aab"
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/${{ env.ZIP_FOLDER_NAME }}/$VERSIONED_MODULE_NAME-release.aab"
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
