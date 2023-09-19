@@ -49,7 +49,6 @@ jobs:
           packageName: com.example.MyApp
           releaseFiles:  ${{inputs.DOWNLOAD_FILE_URL}}
           track: Internal Testing
-          status: inProgress
           inAppUpdatePriority: 2
           whatsNewDirectory: distribution/whatsnew
 
