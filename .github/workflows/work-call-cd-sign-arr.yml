@@ -46,7 +46,7 @@ jobs:
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
 
     outputs:
-      release_url: ${{ steps.decode-base64.outputs.release_url }}
+      release_url: ${{ steps.decode_base64.outputs.release_url }}
       zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
 
     steps:
@@ -80,7 +80,7 @@ jobs:
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
       - name: Decode Key Store Value 🔑
-        id: decode-base64
+        id: decode_base64
         run: |
           echo "${{secrets.KEY_STORE_FILE_CONTENT}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
           echo "key_store_path=${{ runner.temp }}/tmp.jks" >> $GITHUB_OUTPUT
