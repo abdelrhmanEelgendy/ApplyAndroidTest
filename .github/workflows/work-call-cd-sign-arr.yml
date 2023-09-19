@@ -96,7 +96,7 @@ jobs:
         run: |
           arr_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           echo "zip_url=$arr_path" >> $GITHUB_OUTPUT
-          echo "release_url=$arr_path" >> $GITHUB_OUTPUT
+          echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME-release.aab" >> $GITHUB_OUTPUT
 
 
       - name: Upload Assembled Zip File As Artifact 📤
