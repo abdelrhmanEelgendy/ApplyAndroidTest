@@ -40,7 +40,7 @@ jobs:
 #      MODULE_NAME: 'core_module'
 
   workflow-assemble-aar:
-    uses: ./.github/workflows/work-call-ci-assemble-aar.yml
+    uses: ./.github/workflows/work-call-ci-assemble-bundle.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
