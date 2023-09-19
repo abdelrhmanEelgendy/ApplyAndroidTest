@@ -75,7 +75,7 @@ jobs:
         id: renamed_aar_file
         run: |
           old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aab' -print -quit)
-          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/${{ env.ZIP_FOLDER_NAME }}/$VERSIONED_MODULE_NAME-release.aab"
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aab"
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
@@ -88,21 +88,12 @@ jobs:
       - name : Sign ARR Using Decoded Key Store 🔑
         run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
-      - name: Create ZIP File 🗜
-        id: zip_file
-        run: |
-          arr_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
-          echo "arr_path = $arr_path"
-          echo "zip_url=$arr_path" >> $GITHUB_OUTPUT
-          echo "release_url=$arr_path" >> $GITHUB_OUTPUT
-
-
       - name: Upload Assembled Zip File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ZIP_FOLDER_NAME }}
-          path: ${{steps.zip_file.outputs.zip_url}}
+          path:  ${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ZIP FOLDER AS OUTPUT
