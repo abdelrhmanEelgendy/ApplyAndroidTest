@@ -46,7 +46,7 @@ jobs:
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
 
     outputs:
-      release_url: ${{ steps.zip_file.outputs.release_url }}
+      release_url: ${{ steps.decode-base64.outputs.release_url }}
       zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
 
     steps:
