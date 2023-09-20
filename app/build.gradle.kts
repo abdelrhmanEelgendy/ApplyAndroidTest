@@ -6,7 +6,9 @@ plugins {
 android {
     namespace = "com.example.applycicd"
     compileSdk = 33
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.applycicd"
         minSdk = 30
