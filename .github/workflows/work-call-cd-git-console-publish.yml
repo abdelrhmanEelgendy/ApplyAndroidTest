@@ -48,7 +48,7 @@ jobs:
           serviceAccountJsonPlainText: ${{secrets.KEY}}
           packageName: net.sbs.softpos.finpay
           releaseFiles:  ${{inputs.DOWNLOAD_FILE_URL}}
-          track: Internal Testing
+          track: internal
           inAppUpdatePriority: 2
 
       - name: Ping Slack Assemble Module AAR Failed
