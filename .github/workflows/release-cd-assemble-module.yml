@@ -10,11 +10,11 @@ jobs:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Slack Test & Deploy Android AAR Started
+      - name: Ping Slack Test & Deploy Android AAB Started
         uses: someimportantcompany/github-actions-slack-message@v1
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: Test & Deploy AAR Started
+          text: Test & Deploy AAB Started
 
 #  workflow-lint:
 #    uses: ./.github/workflows/work-call-ci-lint.yml
@@ -39,16 +39,16 @@ jobs:
 #    with:
 #      MODULE_NAME: 'app'
 
-  workflow-assemble-aar:
+  workflow-assemble-aab:
     uses: ./.github/workflows/work-call-ci-assemble-bundle.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       MODULE_NAME: 'app'
 
-  workflow-sing-aar:
-    needs: [ workflow-assemble-aar ]
-    uses: ./.github/workflows/work-call-cd-sign-arr.yml
+  workflow-sing-aab:
+    needs: [ workflow-assemble-aab ]
+    uses: ./.github/workflows/work-call-cd-sign-aab.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -56,36 +56,36 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
     with:
-      UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
+      UPLOADED_AAB_FILES_ID: ${{needs.workflow-assemble-aab.outputs.arr_folder_id}}
       MODULE_NAME: 'app'
 
 
   workflow-git_release_upload_files:
-    needs: [ workflow-sing-aar ]
+    needs: [ workflow-sing-aab ]
     uses: ./.github/workflows/work-call-cd-git-console-publish.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       KEY: ${{ secrets.KEY }}
     with:
-      UPLOADED_ZIP_FOLDER_ID: ${{needs.workflow-sing-aar.outputs.zip_folder_id}}
-      DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aar.outputs.release_url}}
+      UPLOADED_ZIP_FOLDER_ID: ${{needs.workflow-sing-aab.outputs.zip_folder_id}}
+      DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aab.outputs.release_url}}
 
   finish:
     needs: [ workflow-git_release_upload_files ]
     name: Finish Deploy Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Slack Test & Deploy AAR Finished Successfully
+      - name: Ping Slack Test & Deploy AAB Finished Successfully
         uses: someimportantcompany/github-actions-slack-message@v1
         if: success()
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: |
-            *A New release AAR Uploaded Successfully*
+            *A New release AAB Uploaded Successfully*
             ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
           color: success
 
-      - name: Ping Slack Test & Deploy Android AAR Failed
+      - name: Ping Slack Test & Deploy Android AAB Failed
         uses: someimportantcompany/github-actions-slack-message@v1
         if: failure()
         with:

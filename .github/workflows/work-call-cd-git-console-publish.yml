@@ -51,12 +51,12 @@ jobs:
           track: internal
           inAppUpdatePriority: 2
 
-      - name: Ping Slack Assemble Module AAR Failed
+      - name: Ping Slack Assemble Module AAB Failed
         uses: someimportantcompany/github-actions-slack-message@v1
         if: failure()
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: |
-            *Assemble Android-module AAR failed*
+            *Assemble Android-module AAB failed*
           color: failure
 

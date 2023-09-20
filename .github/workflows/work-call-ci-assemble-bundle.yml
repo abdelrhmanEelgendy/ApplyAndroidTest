@@ -1,4 +1,4 @@
-name: Publish AAR Module
+name: Assemble AAB Bundle File
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
         value: ${{ jobs.assemble.outputs.folder_name }}
 jobs:
   assemble:
-    name: Assemble Android Module AAR
+    name: Assemble Android Module AAB
     runs-on: ubuntu-latest
     env:
       ARR_FOLDER_NAME: "assemble_module"
@@ -27,11 +27,6 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      - name: Print Gradle variable
-        run: echo "::set-env name=MY_VARIABLE::$(./gradlew printVariable | grep '^MY_VARIABLE=' | cut -d'=' -f2)"
-
-      - name: Use Gradle variable
-        run: echo $MY_VARIABLE
 
         #BUILD  CACHING
       - name: Cache Gradle dependencies
@@ -54,10 +49,10 @@ jobs:
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
 
-      - name: Build AAR ⚙️🛠
+      - name: Build AAB ⚙️🛠
         run: ./gradlew ${{ inputs.MODULE_NAME }}:bundleRelease
 
-      - name: Upload Assemble Module AAR
+      - name: Upload Assemble Module AAB
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
@@ -69,12 +64,12 @@ jobs:
         id: assign_arr_folder
         run: echo "folder_name=$ARR_FOLDER_NAME" >> $GITHUB_OUTPUT
 
-      - name: Ping Slack Assemble Module AAR Failed
+      - name: Ping Slack Assemble Module AAB Failed
         uses: someimportantcompany/github-actions-slack-message@v1
         if: failure()
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: |
-            *Assemble Android-module AAR failed*
+            *Assemble Android-module AAB failed*
           color: failure
 

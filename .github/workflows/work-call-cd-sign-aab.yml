@@ -1,4 +1,4 @@
-name: Sign Arr And Create Zip File 🗳
+name: Sign AAB 🗳
 
 on:
   workflow_call:
@@ -15,7 +15,7 @@ on:
         required: true
 
     inputs:
-      UPLOADED_ARR_FILES_ID:
+      UPLOADED_AAB_FILES_ID:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release.. '
         type: string
         required: true
@@ -46,7 +46,7 @@ jobs:
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
 
     outputs:
-      release_url: ${{ steps.zip_file.outputs.release_url }}
+      release_url: ${{ steps.assign_output_urls.outputs.release_url }}
       zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
 
     steps:
@@ -65,17 +65,17 @@ jobs:
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.UPLOADED_ARR_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+          name: ${{ inputs.UPLOADED_AAB_FILES_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}
 
       - name: List downloaded files 📂
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}
 
-      - name: Rename AAR file 📝
-        id: renamed_aar_file
+      - name: Rename AAB file 📝
+        id: renamed_aab_file
         run: |
-          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aab' -print -quit)
-          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aab"
+          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}" -type f -name '**-release.aab' -print -quit)
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aab"
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
@@ -86,16 +86,14 @@ jobs:
           echo "key_store_path=${{ runner.temp }}/tmp.jks" >> $GITHUB_OUTPUT
 
       - name : Sign ARR Using Decoded Key Store 🔑
-        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{steps.renamed_aar_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aab_file.outputs.renamed_arr_path}} ${{steps.renamed_aab_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
 
-          
-
-
-      - name: Create ZIP File 🗜
-        id: zip_file
+        
+      - name: Assign Urls 🗜
+        id: assign_output_urls
         run: |
-          arr_path=${{steps.renamed_aar_file.outputs.renamed_arr_path}}
-          echo "zip_url=$arr_path" >> $GITHUB_OUTPUT
+          arr_path=${{steps.renamed_aab_file.outputs.renamed_arr_path}}
+          echo "aab_url=$arr_path" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME-release.aab" >> $GITHUB_OUTPUT
 
 
@@ -104,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ZIP_FOLDER_NAME }}
-          path: ${{steps.zip_file.outputs.zip_url}}
+          path: ${{steps.assign_output_urls.outputs.aab_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
       - name: Assign ZIP FOLDER AS OUTPUT
