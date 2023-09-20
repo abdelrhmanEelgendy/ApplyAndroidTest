@@ -6,9 +6,7 @@ plugins {
 android {
     namespace = "com.example.applycicd"
     compileSdk = 33
-    buildFeatures {
-        buildConfig = true
-    }
+
     defaultConfig {
         applicationId = "com.example.applycicd"
         minSdk = 30
@@ -20,8 +18,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "MY_VARIABLE", "MOSTAFA")
-
     }
 
     buildTypes {
@@ -72,11 +68,4 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-}
-
-tasks.register("printVariable") {
-    doLast {
-        val myVariable = "myValue"
-        println("MY_VARIABLE=${myVariable}")
-    }
 }
