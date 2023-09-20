@@ -57,12 +57,6 @@ jobs:
       - name: Build AAB ⚙️🛠
         run: |
           ./gradlew ${{ inputs.MODULE_NAME }}:bundleRelease
-          echo "my_variable=${MY_VARIABLE}" > gradle.properties
-        
-      - name: Display Variable
-        run: |
-          source gradle.properties
-          echo "The variable is: $my_variable"
 
       - name: Upload Assemble Module AAB
         # Upload report to ubuntu server to be used on another action...
