@@ -8,18 +8,18 @@ on:
       KEY:
         required: true
     inputs:
-      UPLOADED_ZIP_FOLDER_ID:
+      UPLOADED_FOLDER_ID:
         description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
         type: string
         required: true
       DOWNLOAD_FILE_URL:
-        description: 'The generated zip file url'
+        description: 'The generated file url'
         type: string
         required: true
     # Map the workflow outputs to job outputs
     outputs:
       release_url:
-        description: Release url link for the zip file.
+        description: Release url link for the file.
         value: ${{ jobs.upload_matrix_artifacts.outputs.url }}
 
 jobs:
@@ -36,11 +36,11 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+          name: ${{ inputs.UPLOADED_FOLDER_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FOLDER_ID }}
 
       - name: List downloaded files
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FOLDER_ID }}
 
       - name: Create Release On Google Play ✅
         uses: r0adkll/upload-google-play@v1

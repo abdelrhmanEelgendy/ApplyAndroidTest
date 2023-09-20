@@ -27,12 +27,12 @@ on:
 
     outputs:
       release_url:
-        description: "Release url link for the zip file."
+        description: "Release url link for the signed file."
         value: ${{ jobs.sign_abb.outputs.release_url }}
 
-      zip_folder_id:
-        description: "uploaded zip folder name"
-        value: ${{ jobs.sign_abb.outputs.zip_folder_name }}
+      signed_folder_id:
+        description: "uploaded signed folder name"
+        value: ${{ jobs.sign_abb.outputs.signed_folder_name }}
 
 
 jobs:
@@ -42,12 +42,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ZIP_FOLDER_NAME: "signed_module"
+      SIGNED_FOLDER_NAME: "signed_module"
       VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
 
     outputs:
       release_url: ${{ steps.assign_output_urls.outputs.release_url }}
-      zip_folder_name: ${{ steps.assign_zip_folder.outputs.folder_name }}
+      signed_folder_name: ${{ steps.assign_signed_folder.outputs.folder_name }}
 
     steps:
 
@@ -83,17 +83,16 @@ jobs:
         run: |
           abb_path=${{steps.renamed_aab_file.outputs.renamed_abb_path}}
           echo "aab_url=$abb_path" >> $GITHUB_OUTPUT
-          echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME-release.aab" >> $GITHUB_OUTPUT
+          echo "release_url=${{ github.workspace }}/$SIGNED_FOLDER_NAME/$VERSIONED_MODULE_NAME-release.aab" >> $GITHUB_OUTPUT
 
 
-      - name: Upload Assembled Zip File As Artifact 📤
-        # Upload zip to ubuntu server to be used on another action...
+      - name: Upload Assembled File As Artifact 📤
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.ZIP_FOLDER_NAME }}
+          name: ${{ env.SIGNED_FOLDER_NAME }}
           path: ${{steps.assign_output_urls.outputs.aab_url}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
-      - name: Assign ZIP FOLDER AS OUTPUT
-        id: assign_zip_folder
-        run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
+      - name: Assign SIGNED FOLDER AS OUTPUT
+        id: assign_signed_folder
+        run: echo "folder_name=$SIGNED_FOLDER_NAME" >> $GITHUB_OUTPUT
