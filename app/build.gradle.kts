@@ -18,6 +18,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "SAFETY_NET_API_KEY", "MOSTAFA")
+
     }
 
     buildTypes {
