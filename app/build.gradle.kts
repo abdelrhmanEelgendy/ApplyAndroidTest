@@ -20,7 +20,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "SAFETY_NET_API_KEY", "MOSTAFA")
+        buildConfigField("String", "MY_VARIABLE", "MOSTAFA")
 
     }
 
