@@ -7,7 +7,7 @@ on:
         required: true
     inputs:
       MODULE_NAME:
-        description: 'Which module you need to run this flow on...'
+        description: 'Which module you need to run this flow on....'
         type: string
         required: true
 
