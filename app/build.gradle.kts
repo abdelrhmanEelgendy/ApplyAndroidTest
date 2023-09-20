@@ -69,3 +69,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
 }
+
+tasks.register("printVariable") {
+    doLast {
+        val myVariable = "myValue"
+        println("MY_VARIABLE=${myVariable}")
+    }
+}

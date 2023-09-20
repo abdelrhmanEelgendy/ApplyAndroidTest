@@ -27,6 +27,12 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
+      - name: Print Gradle variable
+        run: echo "::set-env name=MY_VARIABLE::$(./gradlew printVariable | grep '^MY_VARIABLE=' | cut -d'=' -f2)"
+
+      - name: Use Gradle variable
+        run: echo $MY_VARIABLE
+
         #BUILD  CACHING
       - name: Cache Gradle dependencies
         uses: actions/cache@v2
