@@ -61,7 +61,7 @@ jobs:
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.abb_FOLDER_NAME }}
+          name: ${{ env.ABB_FOLDER_NAME }}
           path: ${{ inputs.MODULE_NAME }}/build/outputs/bundle/release/**-release.aab
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
