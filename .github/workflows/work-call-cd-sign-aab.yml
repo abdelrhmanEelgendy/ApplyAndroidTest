@@ -28,17 +28,17 @@ on:
     outputs:
       release_url:
         description: "Release url link for the zip file."
-        value: ${{ jobs.sign_arr_and_create_zip.outputs.release_url }}
+        value: ${{ jobs.sign_abb.outputs.release_url }}
 
       zip_folder_id:
         description: "uploaded zip folder name"
-        value: ${{ jobs.sign_arr_and_create_zip.outputs.zip_folder_name }}
+        value: ${{ jobs.sign_abb.outputs.zip_folder_name }}
 
 
 jobs:
 
-  sign_arr_and_create_zip:
-    name: Sign And Zip ARR.
+  sign_abb:
+    name: Sign ABB.
     runs-on: ubuntu-latest
 
     env:
@@ -77,7 +77,7 @@ jobs:
           old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}" -type f -name '**-release.aab' -print -quit)
           new_path="${{ github.workspace }}/${{ inputs.UPLOADED_AAB_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aab"
           mv $old_path $new_path
-          echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
+          echo "renamed_abb_path=$new_path" >> $GITHUB_OUTPUT
 
       - name: Decode Key Store Value 🔑
         id: decode-base64
@@ -85,15 +85,15 @@ jobs:
           echo "${{secrets.KEY_STORE_FILE_CONTENT}}" | base64 --decode > ${{ runner.temp }}/tmp.jks
           echo "key_store_path=${{ runner.temp }}/tmp.jks" >> $GITHUB_OUTPUT
 
-      - name : Sign ARR Using Decoded Key Store 🔑
-        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aab_file.outputs.renamed_arr_path}} ${{steps.renamed_aab_file.outputs.renamed_arr_path}} ${{ secrets.KEY_ALIAS }}
+      - name : Sign ABB Using Decoded Key Store 🔑
+        run: jarsigner -keystore ${{ steps.decode-base64.outputs.key_store_path }} -storepass ${{ secrets.KEYSTORE_PASSWORD }} -keypass ${{ secrets.KEY_PASSWORD }} -signedjar ${{steps.renamed_aab_file.outputs.renamed_abb_path}} ${{steps.renamed_aab_file.outputs.renamed_abb_path}} ${{ secrets.KEY_ALIAS }}
 
         
       - name: Assign Urls 🗜
         id: assign_output_urls
         run: |
-          arr_path=${{steps.renamed_aab_file.outputs.renamed_arr_path}}
-          echo "aab_url=$arr_path" >> $GITHUB_OUTPUT
+          abb_path=${{steps.renamed_aab_file.outputs.renamed_abb_path}}
+          echo "aab_url=$abb_path" >> $GITHUB_OUTPUT
           echo "release_url=${{ github.workspace }}/$ZIP_FOLDER_NAME/$VERSIONED_MODULE_NAME-release.aab" >> $GITHUB_OUTPUT
 
 

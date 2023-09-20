@@ -12,21 +12,26 @@ on:
         required: true
 
     outputs:
-      arr_folder_id:
-        description: "uploaded arr folder name"
+      abb_folder_id:
+        description: "uploaded abb folder name"
         value: ${{ jobs.assemble.outputs.folder_name }}
 jobs:
   assemble:
     name: Assemble Android Module AAB
     runs-on: ubuntu-latest
     env:
-      ARR_FOLDER_NAME: "assemble_module"
+      ABB_FOLDER_NAME: "assemble_module"
     outputs:
-      folder_name: ${{ steps.assign_arr_folder.outputs.folder_name }}
+      folder_name: ${{ steps.assign_abb_folder.outputs.folder_name }}
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
 
+      - name: Print Gradle variable
+        run: echo "::set-env name=MY_VARIABLE::$(./gradlew printVariable | grep '^MY_VARIABLE=' | cut -d'=' -f2)"
+
+      - name: Use Gradle variable
+        run: echo $MY_VARIABLE
 
         #BUILD  CACHING
       - name: Cache Gradle dependencies
@@ -56,13 +61,13 @@ jobs:
         # Upload report to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.ARR_FOLDER_NAME }}
+          name: ${{ env.abb_FOLDER_NAME }}
           path: ${{ inputs.MODULE_NAME }}/build/outputs/bundle/release/**-release.aab
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
-      - name: Assign ARR FOLDER AS OUTPUT
-        id: assign_arr_folder
-        run: echo "folder_name=$ARR_FOLDER_NAME" >> $GITHUB_OUTPUT
+      - name: Assign ABB FOLDER AS OUTPUT
+        id: assign_abb_folder
+        run: echo "folder_name=$ABB_FOLDER_NAME" >> $GITHUB_OUTPUT
 
       - name: Ping Slack Assemble Module AAB Failed
         uses: someimportantcompany/github-actions-slack-message@v1
