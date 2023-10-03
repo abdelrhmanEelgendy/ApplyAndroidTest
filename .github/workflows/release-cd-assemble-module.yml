@@ -29,7 +29,7 @@ jobs:
 
   workflow-rename-aar:
     needs: [ workflow-assemble-aar ]
-    uses: ./.github/workflows/work-call-cd-rename-arr.yml
+    uses: ./.github/workflows/work-call-cd-rename-aar.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
