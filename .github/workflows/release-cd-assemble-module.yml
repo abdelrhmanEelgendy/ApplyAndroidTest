@@ -16,10 +16,6 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: Test & Deploy AAR Started
 
-
-
-
-
   workflow-assemble-aar:
     uses: ./.github/workflows/work-call-ci-assemble-aar.yml
     secrets:
@@ -42,7 +38,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_ZIP_FOLDER_ID: ${{needs.workflow-rename-aar.outputs.aar_folder_id}}
+      UPLOADED_FILES_ID: ${{needs.workflow-rename-aar.outputs.aar_folder_id}}
 
   finish:
     needs: [ workflow-git_release_upload_files ]
