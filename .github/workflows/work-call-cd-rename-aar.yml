@@ -1,4 +1,4 @@
-name: Sign Arr And Create Zip File 🗳
+name: Rename AAR File 🗳
 
 on:
   workflow_call:
@@ -19,12 +19,12 @@ on:
 
     outputs:
       aar_folder_id:
-        description: "uploaded zip folder name"
+        description: "uploaded aar folder name"
         value: ${{ jobs.renaming_aar.outputs.aar_folder }}
 
 jobs:
   renaming_aar:
-    name: Sign And Zip ARR.
+    name: Renaming AAR.
     runs-on: ubuntu-latest
 
     env:
@@ -64,7 +64,7 @@ jobs:
           mv $old_path $new_path
           echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
 
-      - name: Upload Assembled Zip File As Artifact 📤
+      - name: Upload Renamed AAR File As Artifact 📤
         # Upload zip to ubuntu server to be used on another action...
         uses: actions/upload-artifact@v3
         with:
@@ -72,7 +72,7 @@ jobs:
           path: ${{steps.renamed_aar_file.outputs.renamed_arr_path}}
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
-      - name: Assign ZIP FOLDER AS OUTPUT
+      - name: Assign Renamed AAR FOLDER AS OUTPUT
         id: assign_zip_folder
         run: echo "aar_folder_id=$AAR_FOLDER_NAME" >> $GITHUB_OUTPUT
 
