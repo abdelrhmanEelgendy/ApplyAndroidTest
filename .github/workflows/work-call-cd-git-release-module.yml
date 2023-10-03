@@ -64,3 +64,25 @@ jobs:
           asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
           asset_content_type: application/aar
 
+      - name: Ping Slack Assemble Module AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Upload Generated Artifacts to Git Release failed*
+          color: failure
+
+  finish:
+    needs: [ upload_matrix_artifacts ]
+    name: Github Release And Upload Android AAR 🗳
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Slack Github Release And Upload Android AAR 🗳 Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Github release and uploading android AAR 🗳 failed*
+          color: failure

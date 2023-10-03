@@ -63,4 +63,11 @@ jobs:
         id: assign_arr_folder
         run: echo "folder_name=$ARR_FOLDER_NAME" >> $GITHUB_OUTPUT
 
-
+      - name: Ping Slack Assemble Module AAR Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Assemble Android-module AAR failed*
+          color: failure

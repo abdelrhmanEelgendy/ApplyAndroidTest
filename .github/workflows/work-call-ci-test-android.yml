@@ -93,3 +93,11 @@ jobs:
       - name: Stop ADB Server
         run: adb kill-server
 
+      - name: Ping Slack Instrumentation-test Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *Instrumentation-test failed*
+          color: failure
