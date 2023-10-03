@@ -33,7 +33,7 @@ jobs:
       MODULE_NAME: 'core_module'
 
   workflow-git_release_upload_files:
-    needs: [ workflow-assemble-aar ]
+    needs: [ workflow-rename-aar ]
     uses: ./.github/workflows/work-call-cd-git-release-module.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
