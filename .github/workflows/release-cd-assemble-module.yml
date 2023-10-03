@@ -1,4 +1,4 @@
-name: FinPay-Payment SDK Release
+name: FinPay-Utilities Module Release
 
 on:
   push:
@@ -10,86 +10,63 @@ jobs:
     name: Start Deploy Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Slack Test & Deploy Android AAB Started
+      - name: Ping Slack Test & Deploy Android AAR Started
         uses: someimportantcompany/github-actions-slack-message@v1
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: Test & Deploy AAB Started
+          text: Test & Deploy AAR Started
 
-#  workflow-lint:
-#    uses: ./.github/workflows/work-call-ci-lint.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      MODULE_NAME: 'app'
-#
-#  workflow-test-unit:
-#    needs: [ workflow-lint ]
-#    uses: ./.github/workflows/work-call-ci-test-unit.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      MODULE_NAME: 'app'
-#
-#  workflow-test-android:
-#    needs: [ workflow-lint ]
-#    uses: ./.github/workflows/work-call-ci-test-android.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      MODULE_NAME: 'app'
-
-  workflow-assemble-aab:
-    uses: ./.github/workflows/work-call-ci-assemble-bundle.yml
+  workflow-lint:
+    uses: ./.github/workflows/work-call-ci-lint.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'app'
+      MODULE_NAME: 'core_module'
 
-  workflow-sing-aab:
-    needs: [ workflow-assemble-aab ]
-    uses: ./.github/workflows/work-call-cd-sign-aab.yml
+  workflow-test-unit:
+    needs: [ workflow-lint ]
+    uses: ./.github/workflows/work-call-ci-test-unit.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_STORE_FILE_CONTENT: ${{ secrets.KEY_STORE_FILE }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
     with:
-      UPLOADED_AAB_FILES_ID: ${{needs.workflow-assemble-aab.outputs.abb_folder_id}}
-      MODULE_NAME: 'app'
+      MODULE_NAME: 'core_module'
 
+  workflow-test-android:
+    needs: [ workflow-lint ]
+    uses: ./.github/workflows/work-call-ci-test-android.yml
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    with:
+      MODULE_NAME: 'core_module'
+
+  workflow-assemble-aar:
+    needs: [ workflow-test-unit, workflow-test-android ]
+    uses: ./.github/workflows/work-call-ci-assemble-aar.yml
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    with:
+      MODULE_NAME: 'core_module'
 
   workflow-git_release_upload_files:
-    needs: [ workflow-sing-aab ]
-    uses: ./.github/workflows/work-call-cd-git-console-publish.yml
+    needs: [ workflow-assemble-aar ]
+    uses: ./.github/workflows/work-call-cd-git-release-module.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      KEY: ${{ secrets.KEY }}
     with:
-      UPLOADED_FOLDER_ID: ${{needs.workflow-sing-aab.outputs.signed_folder_id}}
-      DOWNLOAD_FILE_URL: ${{needs.workflow-sing-aab.outputs.release_url}}
+      UPLOADED_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
 
   finish:
     needs: [ workflow-git_release_upload_files ]
     name: Finish Deploy Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Slack Test & Deploy AAB Finished Successfully
+      - name: Ping Slack Test & Deploy AAR Finished Successfully
         uses: someimportantcompany/github-actions-slack-message@v1
         if: success()
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: |
-            *A New release AAB Uploaded Successfully*
+            *A New release AAR Uploaded Successfully*
             ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
           color: success
 
-      - name: Ping Slack Test & Deploy Android AAB Failed
-        uses: someimportantcompany/github-actions-slack-message@v1
-        if: failure()
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            *A new Release failed*
-          color: failure
