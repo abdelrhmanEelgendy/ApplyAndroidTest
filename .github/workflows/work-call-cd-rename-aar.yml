@@ -1,0 +1,86 @@
+name: Sign Arr And Create Zip File 🗳
+
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
+
+    inputs:
+      UPLOADED_ARR_FILES_ID:
+        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+        type: string
+        required: true
+
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on..'
+        type: string
+        required: true
+
+    outputs:
+      aar_folder_id:
+        description: "uploaded zip folder name"
+        value: ${{ jobs.renaming_aar.outputs.aar_folder }}
+
+jobs:
+  renaming_aar:
+    name: Sign And Zip ARR.
+    runs-on: ubuntu-latest
+
+    env:
+      AAR_FOLDER_NAME: "aar_module"
+      VERSIONED_MODULE_NAME: ${{ inputs.MODULE_NAME }}-${{ github.ref_name }}
+
+    outputs:
+      aar_folder: ${{ steps.assign_zip_folder.outputs.aar_folder_id }}
+
+    steps:
+      - name: Checkout the code 📥
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17 📦
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew 📜
+        run: chmod +x gradlew
+
+      - name: Download artifacts 📥
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.UPLOADED_ARR_FILES_ID }}
+          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+
+      - name: List downloaded files 📂
+        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}
+
+      - name: Rename AAR file 📝
+        id: renamed_aar_file
+        run: |
+          old_path=$(find "${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}" -type f -name '**-release.aar' -print -quit)
+          new_path="${{ github.workspace }}/${{ inputs.UPLOADED_ARR_FILES_ID }}/$VERSIONED_MODULE_NAME-release.aar"
+          mv $old_path $new_path
+          echo "renamed_arr_path=$new_path" >> $GITHUB_OUTPUT
+
+      - name: Upload Assembled Zip File As Artifact 📤
+        # Upload zip to ubuntu server to be used on another action...
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.AAR_FOLDER_NAME }}
+          path: ${{steps.renamed_aar_file.outputs.renamed_arr_path}}
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - name: Assign ZIP FOLDER AS OUTPUT
+        id: assign_zip_folder
+        run: echo "aar_folder_id=$AAR_FOLDER_NAME" >> $GITHUB_OUTPUT
+
+      - name: Ping Slack AAR Protection Failed
+        uses: someimportantcompany/github-actions-slack-message@v1
+        if: failure()
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          text: |
+            *AAR Protection failed*
+          color: failure
