@@ -64,7 +64,7 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           profile: Nexus 5X
           force-avd-creation: true
-#          script: echo "Generated AVD snapshot for caching."
+          script: echo "Generated AVD snapshot for caching."
 
       #############
       - name: Run espresso tests
