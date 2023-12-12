@@ -48,9 +48,6 @@ jobs:
       - name: Grant Permission for Gradlew to Execute
         run: chmod +x ./gradlew
 
-      - name: list Build Files
-        run: ls ${{ inputs.MODULE_NAME }}
-
       - name: Build AAR ⚙️🛠
         run: ./gradlew ${{ inputs.MODULE_NAME }}:zipPackageFiles
 
