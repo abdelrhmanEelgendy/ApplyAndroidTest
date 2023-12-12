@@ -45,7 +45,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_FILES_ID: ${{needs.workflow-release-generation.outputs.zip_folder_id}}
+      UPLOADED_FILES_ID: "kdhnfouawhrgf"
 
   finish:
     needs: [ workflow-git_release_upload_files ]
