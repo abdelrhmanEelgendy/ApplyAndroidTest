@@ -22,7 +22,7 @@ jobs:
     env:
       ZIP_FOLDER_NAME: "zip_file"
     outputs:
-      folder_name: ${{ steps.assign_zip_file.outputs.folder_name }}
+      folder_name: "zip_file"
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
