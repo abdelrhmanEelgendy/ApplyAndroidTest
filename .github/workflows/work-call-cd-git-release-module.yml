@@ -67,10 +67,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
             name: ${{ inputs.UPLOADED_FILES_ID }}
-            path: ${{ env.ZIP_FOLDER_NAME }}
+            path: ${{ env.SAVE_DIRECTORY }}
 
       - name: List downloaded files
-        run: ls ${{ env.ZIP_FOLDER_NAME }}
+        run: ls ${{ env.SAVE_DIRECTORY }}
 
       - name: Upload The Zip File 📤
         id: upload-release-asset
@@ -79,7 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ env.ZIP_FOLDER_NAME }}/**-release.zip
+          asset_path: ${{ env.SAVE_DIRECTORY }}/**-release.zip
           asset_content_type: application/zip
 
       - name: Ping Slack Assemble Module AAR Failed
