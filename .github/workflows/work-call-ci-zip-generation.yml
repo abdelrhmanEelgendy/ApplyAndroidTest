@@ -51,16 +51,16 @@ jobs:
       - name: Build AAR ⚙️🛠
         run: ./gradlew ${{ inputs.MODULE_NAME }}:zipPackageFiles
 
-      - name: Save APK to Workspace
+      - name: Save APK to Artifact
         uses: actions/upload-artifact@v2
         with:
             name: zip_file
             path: ${{ inputs.MODULE_NAME}}/build/**-release.zip
 
-      - name: Prepare workspace
-        uses: actions/checkout@v2
-        with:
-            path: workspace
+#      - name: Prepare workspace
+#        uses: actions/checkout@v2
+#        with:
+#            path: workspace
 
 #      - name: Upload Assemble Zip file
 #        # Upload report to ubuntu server to be used on another action...
