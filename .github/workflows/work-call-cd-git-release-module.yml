@@ -5,12 +5,11 @@ on:
     secrets:
       SLACK_WEBHOOK:
         required: true
-
     inputs:
-    UPLOADED_FILES_ID:
-      description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
-      type: string
-      required: true
+      UPLOADED_FILES_ID:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
     # Map the workflow outputs to job outputs
     outputs:
       release_url:
