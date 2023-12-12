@@ -5,6 +5,7 @@ on:
     secrets:
       SLACK_WEBHOOK:
         required: true
+
     inputs:
     UPLOADED_FILES_ID:
       description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
