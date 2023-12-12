@@ -40,6 +40,8 @@ jobs:
     needs: [ git_release ]
     name: Upload Generated Artifacts to Git Release.
     runs-on: ubuntu-latest
+    env:
+      DOWNLOADED_FILE: "downloads"
     # Map the job outputs to step outputs
     outputs:
       url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
@@ -65,10 +67,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
             name: ${{ inputs.UPLOADED_FILES_ID }}
-            path: downloaded_files
+            path: ${{ env.DOWNLOADED_FILE }}
 
       - name: List downloaded files
-        run: ls downloaded_files
+        run: ls ${{ env.DOWNLOADED_FILE }}
 
       - name: Upload The Zip File 📤
         id: upload-release-asset
@@ -77,7 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: downloaded_files/**-release.zip
+          asset_path: ${{ env.DOWNLOADED_FILE }}/**-release.zip
           asset_content_type: application/zip
 
       - name: Ping Slack Assemble Module AAR Failed
