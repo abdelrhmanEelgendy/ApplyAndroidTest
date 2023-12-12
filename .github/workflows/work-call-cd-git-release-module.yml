@@ -68,8 +68,12 @@ jobs:
       # ...
 
       # For example, if you want to print the file content
+      - name: List Workspace Contents
+        run: ls -R workspace
+
+
       - name: Print APK File Content
-        run: cat workspace/${{ inputs.MODULE_NAME }}/build/**-release.zip
+        run: cat workspace/${{ inputs.MODULE_NAME }}/build/zip_file/**-release.zip
 
       - name: Upload The Zip File 📤
         id: upload-release-asset
