@@ -1,0 +1,73 @@
+name: Publish AAR Module
+
+on:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK:
+        required: true
+    inputs:
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
+        type: string
+        required: true
+#    outputs:
+#      zip_folder_id:
+#        description: "uploaded zip folder name"
+#        value: ${{ jobs.assemble.outputs.folder_name }}
+
+jobs:
+  assemble:
+    name: Assemble Android Module AAR
+    runs-on: ubuntu-latest
+#    env:
+#      ZIP_FOLDER_NAME: "release_zip"
+#    outputs:
+#      folder_name: ${{ steps.assign_zip_file.outputs.folder_name }}
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+        #BUILD  CACHING
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+          #SETUP JAVA
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant Permission for Gradlew to Execute
+        run: chmod +x ./gradlew
+
+      - name: Build AAR ⚙️🛠
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:zipPackageFiles
+
+#      - name: Upload Assemble Zip file
+#        # Upload report to ubuntu server to be used on another action...
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ env.ZIP_FOLDER_NAME }}
+#          path: ${{ inputs.MODULE_NAME }}/build/**-release.zip
+#          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+#      - name: Assign ZIP FILE AS OUTPUT
+#        id: assign_zip_file
+#        run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
+
+#      - name: Ping Slack Assemble Module AAR Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Assemble Android-module AAR failed*
+#          color: failure

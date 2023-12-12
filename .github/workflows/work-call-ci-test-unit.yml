@@ -29,7 +29,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew ${{ inputs.MODULE_NAME }}:testDebugUnitTest
+        run: ./gradlew ${{ inputs.MODULE_NAME }}:test
 
       - name: Upload unit test report
         # Upload report to ubuntu server to be used on another action...
@@ -37,13 +37,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: unit_test_report
-          path: ${{ inputs.MODULE_NAME }}/build/reports/tests/testDebugUnitTest/
+          path: ${{ inputs.MODULE_NAME }}/build/reports/tests/
 
-      - name: Ping Slack Unit-test Failed
-        uses: someimportantcompany/github-actions-slack-message@v1
-        if: failure()
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            *Unit-test failed*
-          color: failure
+#      - name: Ping Slack Unit-test Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Unit-test failed*
+#          color: failure

@@ -1,4 +1,4 @@
-name: core_module Module Release
+name: FinPay-Payment SDK Release
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core_module'
+#      MODULE_NAME: 'finpay-payment-sdk'
 
 #  workflow-test-unit:
 #    needs: [ workflow-lint ]
@@ -29,39 +29,23 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core_module'
+#      MODULE_NAME: 'finpay-payment-sdk'
 
-  workflow-test-android:
-    uses: ./.github/workflows/work-call-ci-test-android.yml
+  workflow-release-generation:
+#    needs: [ workflow-test-unit ]
+    uses: ./.github/workflows/work-call-ci-zip-generation.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core_module'
-
-  workflow-assemble-aar:
-    needs: [ workflow-test-android ]
-    uses: ./.github/workflows/work-call-ci-assemble-aar.yml
-    secrets:
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      MODULE_NAME: 'core_module'
-
-  workflow-rename-aar:
-    needs: [ workflow-assemble-aar ]
-    uses: ./.github/workflows/work-call-cd-rename-aar.yml
-    secrets:
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      UPLOADED_ARR_FILES_ID: ${{needs.workflow-assemble-aar.outputs.arr_folder_id}}
-      MODULE_NAME: 'core_module'
+      MODULE_NAME: 'finpay-payment-sdk'
 
   workflow-git_release_upload_files:
-    needs: [ workflow-rename-aar ]
+    needs: [ workflow-release-generation ]
     uses: ./.github/workflows/work-call-cd-git-release-module.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      UPLOADED_FILES_ID: ${{needs.workflow-rename-aar.outputs.aar_folder_id}}
+      MODULE_NAME: 'finpay-payment-sdk'
 
   finish:
     needs: [ workflow-git_release_upload_files ]
@@ -78,11 +62,11 @@ jobs:
             ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
           color: success
 
-      - name: Ping Slack Test & Deploy Android AAR Failed
-        uses: someimportantcompany/github-actions-slack-message@v1
-        if: failure()
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            *A new Release failed*
-          color: failure
+#      - name: Ping Slack Test & Deploy Android AAR Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *A new Release failed*
+#          color: failure

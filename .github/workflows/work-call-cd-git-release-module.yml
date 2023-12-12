@@ -6,14 +6,14 @@ on:
       SLACK_WEBHOOK:
         required: true
     inputs:
-      UPLOADED_FILES_ID:
-        description: 'The id for the files needs to be downloaded from artifacts and uploaded to git release..'
+      MODULE_NAME:
+        description: 'Which module you need to run this flow on...'
         type: string
         required: true
     # Map the workflow outputs to job outputs
     outputs:
       release_url:
-        description: Release url link
+        description: Release url link for the zip file.
         value: ${{ jobs.upload_matrix_artifacts.outputs.url }}
 
 jobs:
@@ -45,24 +45,24 @@ jobs:
       url: ${{ steps.upload-release-asset.outputs.browser_download_url }}
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ inputs.UPLOADED_FILES_ID }}
-          path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: ${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+#          path: ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
+#
+#      - name: List downloaded files
+#        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
 
-      - name: List downloaded files
-        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}
-
-      - name: Upload Generated Android AAR 🗳
+      - name: Upload The Zip File 📤
         id: upload-release-asset
         uses: sekwah41/upload-release-assets@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.git_release.outputs.release_url }}
-          asset_path: ${{ github.workspace }}/${{ inputs.UPLOADED_FILES_ID }}/**-release.aar
-          asset_content_type: application/aar
+          asset_path: ${{ inputs.MODULE_NAME }}/build/**-release.zip
+          asset_content_type: application/zip
 
       - name: Ping Slack Assemble Module AAR Failed
         uses: someimportantcompany/github-actions-slack-message@v1
@@ -73,16 +73,16 @@ jobs:
             *Upload Generated Artifacts to Git Release failed*
           color: failure
 
-  finish:
-    needs: [ upload_matrix_artifacts ]
-    name: Github Release And Upload Android AAR 🗳
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ping Slack Github Release And Upload Android AAR 🗳 Failed
-        uses: someimportantcompany/github-actions-slack-message@v1
-        if: failure()
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            *Github release and uploading android AAR 🗳 failed*
-          color: failure
+#  finish:
+#    needs: [ upload_matrix_artifacts ]
+#    name: Github Release And Upload Android AAR 🗳
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Ping Slack Github Release And Upload Android AAR 🗳 Failed
+#        uses: someimportantcompany/github-actions-slack-message@v1
+#        if: failure()
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          text: |
+#            *Github release and uploading android AAR 🗳 failed*
+#          color: failure
