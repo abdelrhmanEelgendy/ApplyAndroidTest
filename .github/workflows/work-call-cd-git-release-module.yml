@@ -55,7 +55,7 @@ jobs:
 #        run: ls ${{ github.workspace }}/${{ inputs.UPLOADED_ZIP_FOLDER_ID }}
 
       - name: list Build Files
-        run: ls ${{ inputs.MODULE_NAME }}
+        run: ls ${{ inputs.MODULE_NAME }}/build/
       - name: Upload The Zip File 📤
         id: upload-release-asset
         uses: sekwah41/upload-release-assets@v1.1.0
