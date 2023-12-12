@@ -21,7 +21,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core-module'
+#      MODULE_NAME: 'core_module'
 
 #  workflow-test-unit:
 #    needs: [ workflow-lint ]
@@ -29,7 +29,7 @@ jobs:
 #    secrets:
 #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 #    with:
-#      MODULE_NAME: 'core-module'
+#      MODULE_NAME: 'core_module'
 
   workflow-release-generation:
 #    needs: [ workflow-test-unit ]
@@ -37,7 +37,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core-module'
+      MODULE_NAME: 'core_module'
 
   workflow-git_release_upload_files:
     needs: [ workflow-release-generation ]
@@ -45,7 +45,7 @@ jobs:
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
-      MODULE_NAME: 'core-module'
+      MODULE_NAME: 'core_module'
 
   finish:
     needs: [ workflow-git_release_upload_files ]
