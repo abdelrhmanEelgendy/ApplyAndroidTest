@@ -22,7 +22,7 @@ jobs:
     env:
       ZIP_FOLDER_NAME: "zip_file"
     outputs:
-      folder_name: "zip_file"
+      folder_name: ${{ steps.assign_zip_file.outputs.folder_name }}
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -57,7 +57,7 @@ jobs:
         with:
             name: ${{ env.ZIP_FOLDER_NAME }}
             path: ${{ inputs.MODULE_NAME}}/build/**-release.zip
-            run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
+            run: echo "folder_name=${{ env.ZIP_FOLDER_NAME }}" >> $GITHUB_OUTPUT
 
 #      - name: Prepare workspace
 #        uses: actions/checkout@v2
