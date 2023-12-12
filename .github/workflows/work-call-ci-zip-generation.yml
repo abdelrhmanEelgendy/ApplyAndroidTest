@@ -10,19 +10,19 @@ on:
         description: 'Which module you need to run this flow on...'
         type: string
         required: true
-#    outputs:
-#      zip_folder_id:
-#        description: "uploaded zip folder name"
-#        value: ${{ jobs.assemble.outputs.folder_name }}
+    outputs:
+      zip_folder_id:
+        description: "uploaded zip folder name"
+        value: ${{ jobs.assemble.outputs.folder_name }}
 
 jobs:
   assemble:
     name: Assemble Android Module AAR
     runs-on: ubuntu-latest
-#    env:
-#      ZIP_FOLDER_NAME: "release_zip"
-#    outputs:
-#      folder_name: ${{ steps.assign_zip_file.outputs.folder_name }}
+    env:
+      ZIP_FOLDER_NAME: "zip_file"
+    outputs:
+      folder_name: ${{ steps.assign_zip_file.outputs.folder_name }}
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
@@ -52,10 +52,12 @@ jobs:
         run: ./gradlew ${{ inputs.MODULE_NAME }}:zipPackageFiles
 
       - name: Save APK to Artifact
+        id: assign_zip_file
         uses: actions/upload-artifact@v2
         with:
-            name: zip_file
+            name: ${{ env.ZIP_FOLDER_NAME }}
             path: ${{ inputs.MODULE_NAME}}/build/**-release.zip
+            run: echo "folder_name=$ZIP_FOLDER_NAME" >> $GITHUB_OUTPUT
 
 #      - name: Prepare workspace
 #        uses: actions/checkout@v2
