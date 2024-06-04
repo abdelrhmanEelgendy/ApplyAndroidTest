@@ -39,8 +39,8 @@ jobs:
         run: chmod +x gradlew
 
       - run: |
-          wget https://dl.bintray.com/jeremy-long/owasp/dependency-check-9.2.0-release.zip
-          unzip dependency-check-6.2.2-release.zip
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.2.0/dependency-check-9.2.0-release.zip
+          unzip dependency-check-9.2.0-release.zip
           ./dependency-check/bin/dependency-check.sh --project "MyProject" --scan . --format "ALL" --out ./dependency-check-report
       - name: Upload report
         uses: actions/upload-artifact@v2
