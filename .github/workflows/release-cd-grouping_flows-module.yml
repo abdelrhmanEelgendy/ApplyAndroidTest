@@ -16,57 +16,57 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           text: Test & Deploy AAR Started
 
-#  workflow-lint:
-#    uses: ./.github/workflows/work-call-ci-lint.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      MODULE_NAME: 'core_module'
-
-#  workflow-test-unit:
-#    needs: [ workflow-lint ]
-#    uses: ./.github/workflows/work-call-ci-test-unit.yml
-#    secrets:
-#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#    with:
-#      MODULE_NAME: 'core_module'
-
-  workflow-release-generation:
-#    needs: [ workflow-test-unit ]
-    uses: ./.github/workflows/work-call-ci-zip-generation.yml
+  workflow-lint:
+    uses: ./.github/workflows/work-call-ci-lint.yml
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     with:
       MODULE_NAME: 'core_module'
-
-  workflow-git_release_upload_files:
-    needs: [ workflow-release-generation ]
-    uses: ./.github/workflows/work-call-cd-git-release-module.yml
-    secrets:
-      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    with:
-      UPLOADED_FILES_ID: ${{needs.workflow-release-generation.outputs.zip_folder_id}}
-
-  finish:
-    needs: [ workflow-git_release_upload_files ]
-    name: Finish Deploy Workflow
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ping Slack Test & Deploy AAR Finished Successfully
-        uses: someimportantcompany/github-actions-slack-message@v1
-        if: success()
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          text: |
-            *A New release AAR Uploaded Successfully*
-            ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
-          color: success
-
-#      - name: Ping Slack Test & Deploy Android AAR Failed
+#
+##  workflow-test-unit:
+##    needs: [ workflow-lint ]
+##    uses: ./.github/workflows/work-call-ci-test-unit.yml
+##    secrets:
+##      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+##    with:
+##      MODULE_NAME: 'core_module'
+#
+#  workflow-release-generation:
+##    needs: [ workflow-test-unit ]
+#    uses: ./.github/workflows/work-call-ci-zip-generation.yml
+#    secrets:
+#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#    with:
+#      MODULE_NAME: 'core_module'
+#
+#  workflow-git_release_upload_files:
+#    needs: [ workflow-release-generation ]
+#    uses: ./.github/workflows/work-call-cd-git-release-module.yml
+#    secrets:
+#      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#    with:
+#      UPLOADED_FILES_ID: ${{needs.workflow-release-generation.outputs.zip_folder_id}}
+#
+#  finish:
+#    needs: [ workflow-git_release_upload_files ]
+#    name: Finish Deploy Workflow
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Ping Slack Test & Deploy AAR Finished Successfully
 #        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
+#        if: success()
 #        with:
 #          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 #          text: |
-#            *A new Release failed*
-#          color: failure
+#            *A New release AAR Uploaded Successfully*
+#            ${{ needs.workflow-git_release_upload_files.outputs.release_url }}
+#          color: success
+#
+##      - name: Ping Slack Test & Deploy Android AAR Failed
+##        uses: someimportantcompany/github-actions-slack-message@v1
+##        if: failure()
+##        with:
+##          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+##          text: |
+##            *A new Release failed*
+##          color: failure
