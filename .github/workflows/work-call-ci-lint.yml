@@ -43,10 +43,10 @@ jobs:
           unzip dependency-check-9.2.0-release.zip
           ./dependency-check/bin/dependency-check.sh --project "MyProject" --scan . --format "ALL" --out ./dependency-check-report
       - name: Upload report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dependency-check-report
-          path: ./dependency-check-report
+          path: ${{ inputs.MODULE_NAME }}/build/reports/dependency-check-report
 #      - name: Run Lint
 #        run: ./gradlew ${{ inputs.MODULE_NAME }}:lint
 #
