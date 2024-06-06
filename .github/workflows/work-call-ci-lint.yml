@@ -19,16 +19,6 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'corretto'
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -38,31 +28,28 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - run: |
+      - name: Cache OWASP Dependency-Check data
+        id: cache-owasp
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ossindex
+            ~/.cache/dependency-check
+          key: ${{ runner.os }}-dependency-check-${{ hashFiles('**/build.gradle', '**/build.gradle.kts', '**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-dependency-check-
+
+      - name: Install OWASP Dependency-Check
+        run: |
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.2.0/dependency-check-9.2.0-release.zip
           unzip dependency-check-9.2.0-release.zip
+
+      - name: Run OWASP Dependency-Check for MyProject
+        run: |
           ./dependency-check/bin/dependency-check.sh --project "MyProject" --scan . --format "ALL" --out ./dependency-check-report
+
       - name: Upload report
         uses: actions/upload-artifact@v3
         with:
           name: dependency-check-report
-          path: ${{ inputs.MODULE_NAME }}/build/reports/dependency-check-report
-#      - name: Run Lint
-#        run: ./gradlew ${{ inputs.MODULE_NAME }}:lint
-#
-#      - name: Upload html test report
-#        # Upload report to ubuntu server to be used on another action...
-#        if: ${{ always() }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: lint_report
-#          path: ${{ inputs.MODULE_NAME }}/build/reports/lint-results-*
-
-#      - name: Ping Slack Android Lint Failed
-#        uses: someimportantcompany/github-actions-slack-message@v1
-#        if: failure()
-#        with:
-#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-#          text: |
-#            *Android Lint failed*
-#          color: failure
+          path: ./dependency-check-report
